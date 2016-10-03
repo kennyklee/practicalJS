@@ -1,0 +1,126 @@
+<script src="../tinytest.js"></script>
+<script>
+
+// The map() method creates a new array with the results of calling a provided function on every element in this array.
+
+// map(originalArray, callback, optionalThis);
+// callback = function(number, index, originalArray)
+
+// Example 1: Callback should run 3 times.
+// map([1, 2, 3], function() {});
+
+// Example 2: Callback has access to ith element.
+// map([1, 2, 3], function(number) {
+//     console.log(number);
+// });
+
+// Example 3: Callback has access to index/position.
+// map([1, 2, 3], function(number, index) {
+//     console.log(index);
+// });
+
+// Example 4: Callback has access to original array.
+// map([1, 2, 3], function(number, index, originalArray) {
+//     console.log(originalArray);
+// });
+
+// Make sure that configurable this works.
+// Example 5: Callback has access to optional this.
+// map([1, 2, 3], function() {
+//     console.log(this.name)
+// }, {name: 'Gordon'});
+
+// Example 6: Callback returns a new array.
+// var originalArray = [1, 2, 3];
+// var mappedArray = map(originalArray, function() {});
+// originalArray !== mappedArray;
+
+// Example 7:
+// var originalArray = [1, 2, 3];
+// var mappedArray = map(originalArray, function(element) {
+//     return element * 2;
+// });
+// Expect mappedArray === [2, 4, 6]
+
+function map(originalArray, callback, optionalThis){
+    var mappedCallback = callback;
+
+    var mappedArray = [];
+
+    if (optionalThis) {
+        mappedCallback = callback.bind(optionalThis);
+    }
+
+    for (var i = 0; i < originalArray.length; i++) {
+        if (i in originalArray) {
+            mappedArray[i] = mappedCallback(originalArray[i], i, originalArray);
+        }
+    }
+    return mappedArray;
+};
+
+tests({
+    'It should run the callback function array.length time.': function() {
+        var numOfTimeCallbackHasRun = 0;
+        map([1,2,3], function() {
+            numOfTimeCallbackHasRun++;
+        });
+        eq(numOfTimeCallbackHasRun, 3);
+    },
+    'It should pass in the ith element as the first argument to the callback.': function() {
+        map([1], function(number) {
+            eq(number, 1);
+        });
+    },
+    'It should pass in the ith position as the second argument to the callback.': function() {
+        map([1], function(number, index) {
+            eq(index, 0);
+        });
+    },
+    'It should pass in the original array as the third argument to the callback.': function() {
+        var testArray = [1, 2, 3];
+        map(testArray, function(number, index, originalArray) {
+            eq(originalArray, testArray);
+        });
+    },
+    'It should accept an optional \'this\' object.': function() {
+        map([1], function() {
+            eq(this.description, 'I should be accessiblle inside of the callback.')
+        }, {description: 'I should be accessiblle inside of the callback.'});
+    },
+    'It should return an array.': function() {
+        var mappedArray = map([], function() {});
+        eq(Array.isArray(mappedArray), true)
+    },
+    'It should return a new array, not the original array.': function() {
+        var originalArray = [1, 2, 3];
+        var mappedArray = map(originalArray, function() {});
+        // filteredArray is not the original array
+        eq(mappedArray !== originalArray, true);
+    },
+    'It should return a new array with same length of the original array.': function() {
+        var mappedArray = map([1, 2, 3], function(element) {
+            return element * 2;
+        });
+        eq(mappedArray.length, 3);
+    },
+    'It should return a new array with elements where callback returns true.': function() {
+        var mappedArray = map([1, 2, 3], function(element) {
+            return element * 2;
+        });
+        console.log(mappedArray);
+        eq(mappedArray[0], 2);
+        eq(mappedArray[1], 4);
+        eq(mappedArray[2], 6);
+    },
+    'It should ignore unassigned indexes.': function() {
+        var mappedArray = map([, 2, undefined], function(element) {
+            return element;
+        });
+        eq(mappedArray[0], undefined);
+        eq(mappedArray[1], 2);
+        eq(mappedArray[2], undefined);
+    }
+});
+</script>
+
