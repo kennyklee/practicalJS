@@ -59,25 +59,22 @@ Returns value:
 
 Requirements:
 
-    If initialValue, previousValue should be equal to initialValue.
-    If initialValue, currentValue will be equal to the first value in the array.
+    If initialValue, previousValue should start with initialValue.
+    If initialValue, currentValue should start with array[0].
     If initialValue, callback will start at index 0.
 
-    If no initialValue, previousValue will be equal to the first value in the array.
-    If no initialValue, currentValue will be equal to the second value in the array.
+    If no initialValue, previousValue should start with array[0].
+    If no initialValue, currentValue should start with array[1].
     If no initialValue, callback will start at index 1.
 
-    Callback should not run on holes in the array.
+    If initialValue, and array is empty, it should return initialValue without calling callback.
+    If no intitalValue, and array and has one element, it should return only element without calling callback.
 
+    It should actually reduce.
+    If should exclude holes.
     If array is empty, and no initialValue, throw TypeError.
-        reduce([], function() {}) >>> TypeError
+    It should pass array as fourth argument to callback.
 
-    If array and has one element, and no initialValue, return only element without calling callback.
-        reduce([/* hole */, 1] ,function() {}) >>> return 1 without calling callback
-        reduce([1], function() {}) >>> return 1 without calling callback
-
-    If array is empty, and there is an initialValue, return initialValue without calling callback.
-        reduce([], function () {}, 0) >>> return 0 without calling callback
 
 
 // ==========================================
