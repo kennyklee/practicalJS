@@ -63,28 +63,42 @@ function reduce(array, callback, initialValue) {
 
     var startingIndex = 0;
     var resultSoFar = initialValue;
+    var length = array.length;
+    var arrayIndexes = Object.keys(array);
 
     // No initialValue.
     if (arguments.length < 3) {
 
+        // Array is empty, throw TypeError.
+        if (arrayIndexes.length === 0) {
+            throw new TypeError('Reduce of empty array with no initial value');
+        }
+
         // If array has one element, just return it
-        if (Object.keys(array).length === 1) {
-            var onlyIndex = Object.keys(array)[0];
+        if (arrayIndexes.length === 1) {
+            var onlyIndex = arrayIndexes[0];
             var onlyElement = array[onlyIndex];
             return onlyElement;
         }
+
+        // We want to skip holes at the beginning of the array.
+        while (startingIndex in array === false && startingIndex < length) {
+            startingIndex++;
+        }
+
         resultSoFar = array[startingIndex];
         startingIndex++;
+
     // Has initialValue.
     } else {
         // Need to check if array is empty AND initialValue.
-        if (Object.keys(array).length === 0) {
+        if (arrayIndexes.length === 0) {
             return initialValue;
         }
     }
-    for (var i = startingIndex; i < array.length; i++) {
+    for (var i = startingIndex; i < length; i++) {
         if (i in array) {
-            resultSoFar = callback(resultSoFar, array[i], i);
+            resultSoFar = callback(resultSoFar, array[i], i, array);
         }
     }
     return resultSoFar;
@@ -129,12 +143,12 @@ tests({
     },
     'If no initialValue, currentValue should start with array[1].': function() {
         reduce([1, 2], function(previousValue, currentValue) {
-            eq(currentValue, 2); 
-        });  
+            eq(currentValue, 2);
+        });
     },
     'If no initialValue, callback will start at index 1.': function() {
         reduce([1, 2], function(previousValue, currentValue, currentIndex) {
-            eq(currentIndex, 1); 
+            eq(currentIndex, 1);
         });  },
 
     'If initialValue, and array is empty, it should return initialValue without calling callback.': function() {
@@ -160,9 +174,6 @@ tests({
         }, 0);
         eq(sum, 6);
     },
-    // Gordon was not convinced and broke it up.
-    // Describe as climbing a ladder.  All ok, until you look down.  How the heck did I get here?
-    // Refactoring is that planned? Or is this real?
     'If should exclude holes.': function() {
         var sum = reduce([,1,,,,2,3,,], function(a, b){
             return a + b;
@@ -175,8 +186,21 @@ tests({
         });
         eq(sum, 6);
     },
-    'If array is empty, and no initialValue, throw TypeError.': function() {fail();},
-    'It should pass array as fourth argument to callback.': function() {fail();}
+    'If array is empty, and no initialValue, throw TypeError.': function() {
+        var isTypeError = false;
+        try {
+            reduce([], function() {});
+        } catch(e) {
+            var isTypeError = (e instanceof TypeError);
+        }
+        eq(isTypeError, true);
+    },
+    'It should pass array as fourth argument to callback.': function() {
+        var testArray = [1, 2];
+        reduce(testArray, function(previousValue, currentValue, currentIndex, arrayToReduce) {
+            eq(arrayToReduce, testArray);
+        });
+    }
 });
 </script>
 
