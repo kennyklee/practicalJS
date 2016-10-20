@@ -5,7 +5,8 @@ var todos = [
 ];
 
 displayTodos = function(array) {
-    console.log(array);
+    var todoItem = document.getElementById("todo_item");
+    todoItem.innerHTML = array
 }
 
 addTodo = function(todo) {
@@ -23,7 +24,7 @@ deleteTodo = function(position) {
 // ===============================================
 // Tests for Todo app - using tinytest.js
 // ===============================================
-
+// TEST ASSERTIONS
 // var fail               = TinyTest.fail.bind(TinyTest),
 //     assert             = TinyTest.assert.bind(TinyTest),
 //     assertEquals       = TinyTest.assertEquals.bind(TinyTest),
@@ -40,7 +41,9 @@ tests({
 // It should have a way to display todos
 tests({
     'It should have a place to display todos': function() {
-        assertStrictEquals("todo1", todos[0]);
+        var todoItem = document.getElementById("todo_item");
+        displayTodos(todos);
+        assertStrictEquals(todos.toString(), todoItem.innerHTML);
     },
 });
 // It should have a way to add new todos
@@ -70,14 +73,27 @@ tests({
 // It should have a function to display todos
 tests({
     'It should have a function to display todos': function() {
-        displayTodos(todos);
-        //console.log(displayTodos(todos));
-        assert(displayTodos(todos), "It works");
+        eq(typeof displayTodos, "function");
     },
 });
 // It should have a function to add todos
-// It should have a function to chnage todos
+tests({
+    'It should have a function to add todos': function() {
+        eq(typeof addTodo, "function");
+    },
+});
+// It should have a function to change todos
+tests({
+    'It should have a function to change todos': function() {
+        eq(typeof changeTodo, "function");
+    },
+});
 // It should have a function to delete todos
+tests({
+    'It should have a function to delete todos': function() {
+        eq(typeof deleteTodo, "function");
+    },
+});
 
 // Version 3
 // It should store the todos array on an object
