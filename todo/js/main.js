@@ -1,4 +1,4 @@
-// Todo vanillaJS code below
+// PracticalJS - Todo vanillaJS code below
 
 var todos = [
     "todo1", "todo2", "todo3"
