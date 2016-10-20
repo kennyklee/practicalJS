@@ -1,23 +1,22 @@
 // Todo vanillaJS code below
 
-function test() {
-    console.log("test");
-};
+var todos = [];
 
 // ===============================================
 // Tests for Todo app - using tinytest.js
 // ===============================================
 
+// var fail               = TinyTest.fail.bind(TinyTest),
+//     assert             = TinyTest.assert.bind(TinyTest),
+//     assertEquals       = TinyTest.assertEquals.bind(TinyTest),
+//     eq                 = TinyTest.assertEquals.bind(TinyTest), // alias for assertEquals
+//     assertStrictEquals = TinyTest.assertStrictEquals.bind(TinyTest),
+
 // Version 1
 // It should have a place to store todos
 tests({
-    'It should': function() {
-        eq(7, add(2, 5));
-        eq(6.6, add(2.6, 4));
-        },
-
-        'subtracts numbers': function() {
-        eq(-2, add(2, -4));
+    'It should have a place to store todos': function() {
+        assert(todos);
     },
 });
 
