@@ -1,6 +1,24 @@
 // Todo vanillaJS code below
 
-var todos = [];
+var todos = [
+    "todo1", "todo2", "todo3"
+];
+
+displayTodos = function(array) {
+    console.log(array);
+}
+
+addTodo = function(todo) {
+    todos.push(todo);
+}
+
+changeTodo = function(position, value) {
+    todos[position] = value;
+}
+
+deleteTodo = function(position) {
+    todos.splice(position, 1);
+}
 
 // ===============================================
 // Tests for Todo app - using tinytest.js
@@ -19,14 +37,44 @@ tests({
         assert(todos);
     },
 });
-
 // It should have a way to display todos
+tests({
+    'It should have a place to display todos': function() {
+        assertStrictEquals("todo1", todos[0]);
+    },
+});
 // It should have a way to add new todos
+tests({
+    'It should have a way to add new todos': function() {
+        addTodo("todo4");
+        eq(todos.length, 4);
+    },
+});
 // It should have a way to change a todo
+tests({
+    'It should have a way to change a todo': function() {
+        changeTodo(0, "todo1_changed");
+        eq(todos[0], "todo1_changed");
+    }
+})
 // It should have a way to delete a todo
+tests({
+    'It should have a way to delete a todo': function() {
+        var originalTodoLength = todos.length;
+        deleteTodo(1);
+        eq(originalTodoLength - 1, todos.length);
+    }
+})
 
 // Version 2
 // It should have a function to display todos
+tests({
+    'It should have a function to display todos': function() {
+        displayTodos(todos);
+        //console.log(displayTodos(todos));
+        assert(displayTodos(todos), "It works");
+    },
+});
 // It should have a function to add todos
 // It should have a function to chnage todos
 // It should have a function to delete todos
