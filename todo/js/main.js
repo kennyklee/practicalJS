@@ -1,24 +1,36 @@
 // PracticalJS - Todo vanillaJS code below
-
 var todoList = {
-    todoText: [
-      "todo1", "todo2", "todo3"
+    todos: [
+        {
+            todoText: "todo1",
+            completed: true
+        },
+        {
+            todoText: "todo2",
+            completed: true
+        },
+        {
+            todoText: "todo3",
+            completed: true
+        }
     ],
     displayTodos: function(array) {
         var todoItem = document.getElementById("todo_item");
-        todoItem.innerHTML = array
+        todoItem.innerHTML = array;
     },
     addTodo: function(todoItem) {
-        this.todoText.push({todoItem});
+        this.todos.push(todoItem);
     },
     changeTodo: function(position, value) {
-        this.todoText[position] = value;
+        this.todos[position] = value;
     },
     deleteTodo: function(position) {
-        this.todoText.splice(position, 1);
+        this.todos.splice(position, 1);
     },
     toggleCompleted: function(){
-
+        for ( var i = 0; i < this.todos.length; i++ ) {
+            this.todos[i].completed = !this.todos[i].completed;
+        }
     }
 }
 
@@ -36,37 +48,39 @@ var todoList = {
 // It should have a place to store todos
 tests({
     'It should have a place to store todos': function() {
-        assert(todoList.todoText);
+        assert(todoList.todos);
     },
 });
 // It should have a way to display todoText
 tests({
     'It should have a place to display todos': function() {
         var todoItem = document.getElementById("todo_item");
-        todoList.displayTodos(todoList.todoText);
-        assertStrictEquals(todoList.todoText.toString(), todoItem.innerHTML);
+        todoList.displayTodos(todoList.todos);
+        assertStrictEquals(todoList.todos.toString(), todoItem.innerHTML);
     },
 });
 // It should have a way to add new todos
 tests({
     'It should have a way to add new todos': function() {
-        todoList.addTodo("todo4");
-        eq(todoList.todoText.length, 4);
+        var newTodoItem = {todoText: "Changed todoText", completed: true}
+        todoList.addTodo(newTodoItem);
+        eq(todoList.todos.length, 4);
+        console.log(todoList.todos);
     },
 });
 // It should have a way to change a todo
 tests({
     'It should have a way to change a todo': function() {
         todoList.changeTodo(0, "todo1_changed");
-        eq(todoList.todoText[0], "todo1_changed");
+        eq(todoList.todos[0], "todo1_changed");
     }
 })
 // It should have a way to delete a todo
 tests({
     'It should have a way to delete a todo': function() {
-        var originalTodoLength = todoList.todoText.length;
+        var originalTodoLength = todoList.todos.length;
         todoList.deleteTodo(1);
-        eq(originalTodoLength - 1, todoList.todoText.length);
+        eq(originalTodoLength - 1, todoList.todos.length);
     }
 })
 
@@ -100,7 +114,7 @@ tests({
 // It should store the todos array on an object
 tests({
     'It should store the todos array on an object': function() {
-        eq(typeof todoList.todoText, "object")
+        eq(typeof todoList.todos, "object")
     }
 });
 // It should have a displayTodos method
@@ -133,24 +147,38 @@ tests({
 tests({
     'todoList.addTodo should add objects': function() {
         //debugger;
-        todoList.addTodo("hello");
-        var lastArrayPosition = todoList.todoText.length - 1;
-        console.log(todoList.todoText[lastArrayPosition]);
-        eq(typeof todoList.todoText[lastArrayPosition], "object");
+        var newTodoItem = {todoText: "added Todo", completed: true}
+        todoList.addTodo(newTodoItem);
+        var lastArrayPosition = todoList.todos.length - 1;
+        eq(typeof todoList.todos[lastArrayPosition], "object");
     }
 })
-// =============================
-// KENNY NOTES (Work in progress)
-// todoApp is the app object
-// todoList is the array of todoitems
-// >> todoList has an object for each todo.
-// >> Within the object are the following properties:
-// todoText
-// completed
-// =============================
-
 // todoList.changeTodo should change the todoText property
+tests({
+    'todoList.changeTodo should change the todoText property': function() {
+        //debugger;
+        var newTodoItem = {todoText: "Changed todoText", completed: true};
+        todoList.changeTodo(0, newTodoItem);
+        var lastArrayPosition = todoList.todos.length - 1;
+        eq(typeof todoList.todos[lastArrayPosition], "object");
+    }
+})
 // todoList.toggleCompleted should change the completed property
+tests({
+    'todoList.toggleCompleted should change the completed property': function() {
+        function getProperty(array){ // TODO: Second arguement with property for "completed" doesn't work.
+            var saveCompletedArray = [];
+            for ( var i = 0; i < array.length; i++ ) {
+                saveCompletedArray.push(array[i].completed); //Completed is hardcoded
+            }
+            return saveCompletedArray;
+        }
+        var beforeToggle = getProperty(todoList.todos);
+        todoList.toggleCompleted();
+        var afterToggle = getProperty(todoList.todos);
+        assert(!(beforeToggle.toString() === afterToggle.toString()), "Doesn't equal");
+    }
+})
 
 // Version 5
 // .displayTodos should show .todoText
