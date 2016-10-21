@@ -340,10 +340,42 @@ tests({
 })
 
 // Version 8
-// It should have working controls for .addTodo
-// It should have working controls for .changeTodo
-// It should have working controls for .deleteTodo
-// It should have working controls for .toggleCompleted
+// It should have working controls for .addTodo. Textbox and button.
+tests({
+    'It should have working control for .addTodo. Textbox and button.': function() {
+        var textbox = document.getElementById("add_todo_text");
+        var button = document.getElementById("add_todo_button");
+        assert(textbox, "Missing textbox");
+        assert(button, "Missing button");
+    }
+})
+// It should have working controls for .changeTodo. Textbox and button.
+tests({
+    'It should have working control for .addTodo. Textbox and button.': function() {
+        var textbox = document.getElementById("change_todo_text");
+        var button = document.getElementById("change_todo_button");
+        assert(textbox, "Missing textbox");
+        assert(button, "Missing button");
+    }
+})
+// It should have working controls for .deleteTodo. Textbox and button.
+tests({
+    'It should have working control for .addTodo. Textbox and button.': function() {
+        var textbox = document.getElementById("delete_todo_text");
+        var button = document.getElementById("delete_todo_button");
+        assert(textbox, "Missing textbox");
+        assert(button, "Missing button");
+    }
+})
+// It should have working controls for .toggleCompleted. Textbox and button.
+tests({
+    'It should have working control for .addTodo. Textbox and button.': function() {
+        var textbox = document.getElementById("toggle_completed_text");
+        var button = document.getElementById("toggle_completed_button");
+        assert(textbox, "Missing textbox");
+        assert(button, "Missing button");
+    }
+})
 
 // Version 9
 // There should be an li element for every todo
