@@ -12,16 +12,30 @@
     <button id="display_todos" onClick="todoList.displayTodos()">Display Todos</button>
     <button id="toggle_all" onClick="todoList.toggleAll()">Toggle All</button>
     <div>
-        <input id="add_todo_text" type="text"><button id="add_todo_button">Add Todo</button>
+        <input id="add_todo_text" type="text" placeholder="Enter todo text">
+        <button id="add_todo_button"
+            onClick="todoList.addTodo(document.getElementById('add_todo_text').value)">
+            Add Todo
+        </button>
     </div>
     <div>
-        <input id="change_todo_text" type="text"><button id="change_todo_button">Change Todo</button>
+        <input id="change_todo_text" type="text" placeholder="Enter todo text">
+        <input id="change_todo_position" type="number" placeholder="Enter todo position">
+        <button id="change_todo_button"
+            onClick="todoList.changeTodo(document.getElementById('change_todo_position').value, document.getElementById('change_todo_text').value)">
+            Change Todo
+        </button>
     </div>
     <div>
-        <input id="delete_todo_text" type="text"><button id="delete_todo_button">Delete Todo</button>
+        <input id="delete_todo_text" type="text" placeholder="Optional position">
+        <button id="delete_todo_button"
+            onClick="todoList.deleteTodo(document.getElementById('delete_todo_text').value)">
+            Delete Todo
+        </button>
     </div>
     <div>
-        <input id="toggle_completed_text" type="text"><button id="toggle_completed_button">Toggle Completed</button>
+        <input id="toggle_completed_text" type="text" placeholder="Enter position">
+        <button id="toggle_completed_button" onClick="todoList.toggleCompleted(document.getElementById('toggle_completed_text').value)">Toggle Completed</button>
     </div>
 
     <!-- List of todos -->

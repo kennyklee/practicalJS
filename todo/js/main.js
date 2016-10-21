@@ -31,6 +31,9 @@ var todoList = {
         }
     },
     addTodo: function(todoText, completed = false) {
+        if (!todoText) {
+            return;
+        }
         this.todos.push(
             {
                 todoText: todoText,
@@ -39,46 +42,49 @@ var todoList = {
         );
         this.displayTodos();
     },
-    changeTodo: function(position, value) {
-        this.todos[position] = value;
-        this.displayTodos();
+    changeTodo: function(position, todoText) {;
+        if ((position >= 0) && todoText) {
+            this.todos[position].todoText = todoText;
+            this.displayTodos();
+        }
     },
     deleteTodo: function(position) {
         this.todos.splice(position, 1);
         this.displayTodos();
     },
     toggleCompleted: function(position) {
-        if (position === undefined) {
+        if (position >= 0) {
+            this.todos[position].completed = !this.todos[position].completed;
+            this.displayTodos();
+        } else {
             console.log("Please include a position as an argument.");
-            return;
+            return
         }
-        this.todos[position].completed = !this.todos[position].completed;
-        this.displayTodos();
     },
     toggleAll: function() {
-            var totalTodos = this.todos.length;
-            var completedTodos = 0;
+        var totalTodos = this.todos.length;
+        var completedTodos = 0;
 
-            // Get number of completed todos.
+        // Get number of completed todos.
+        for (var i = 0; i < totalTodos; i++) {
+            if (this.todos[i].completed) {
+                completedTodos++;
+            }
+        }
+
+        // Compare num of completed todos to total todos
+        // If everything is true, make it false.
+        if (completedTodos === totalTodos) {
             for (var i = 0; i < totalTodos; i++) {
-                if (this.todos[i].completed) {
-                    completedTodos++;
-                }
+                this.todos[i].completed = false
             }
-
-            // Compare num of completed todos to total todos
-            // If everything is true, make it false.
-            if (completedTodos === totalTodos) {
-                for (var i = 0; i < totalTodos; i++) {
-                    this.todos[i].completed = false
-                }
+        }
+        // Otherwise, Make everything true
+        else {
+            for (var i = 0; i < totalTodos; i++) {
+                this.todos[i].completed = true;
             }
-            // Otherwise, Make everything true
-            else {
-                for (var i = 0; i < totalTodos; i++) {
-                    this.todos[i].completed = true;
-                }
-            }
+        }
         this.displayTodos();
     }
 }
@@ -120,7 +126,7 @@ tests({
 tests({
     'It should have a way to change a todo': function() {
         todoList.changeTodo(0, "todo1_changed");
-        eq(todoList.todos[0], "todo1_changed");
+        eq(todoList.todos[0].todoText, "todo1_changed");
     }
 })
 // It should have a way to delete a todo
@@ -214,6 +220,7 @@ tests({
 // todoList.toggleCompleted should change the completed property
 tests({
     'todoList.toggleCompleted should change the completed property': function() {
+        debugger;
         var position = 0;
         var beforeToggle = todoList.todos[position].completed;
         // console.log(beforeToggle);
@@ -381,6 +388,21 @@ tests({
 // There should be an li element for every todo
 // Each li element should contain .todoText
 // Each li element shoudl show .completed
+// NOTE: The 3 tests above will be combined into 1 in order to check for HTML string.
+tests({
+    'For each todo, there should be an li element with .todoText and .completed': function() {
+        var todoDivs = document.getElementById("todo_list");
+        todoList.todos = [
+            {todoText: "First todo", completed: false},
+            {todoText: "Middle todo", completed: true},
+            {todoText: "Last todo", completed: true},
+        ]
+        todoList.displayTodos();
+        eq(todoDivs.children[0].innerHTML, "<span>(&nbsp;&nbsp;&nbsp;)</span> <span>First todo</span>");
+        eq(todoDivs.children[1].innerHTML, "<span>(✓)</span> <span>Middle todo</span>");
+        eq(todoDivs.children[2].innerHTML, "<span>(✓)</span> <span>Last todo</span>");
+    }
+})
 
 // Version 10
 // There should be a way to create delete buttons
