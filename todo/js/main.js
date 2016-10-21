@@ -59,6 +59,24 @@ var todoList = {
     }
 }
 
+var handler = {
+    addTodoHandler: function() {
+
+    },
+    changeTodoHandler: function() {
+
+    },
+    toggleCompletedHandler: function() {
+
+    },
+    toggleAllHandler: function() {
+
+    }
+}
+
+// Refactor this to use create deleteButton function.
+// Refactor to use add element function <li>.
+// Watch PJS course 8-10
 var view = {
     displayTodos: function() {
         var todoItem = document.getElementById("todo_list");
