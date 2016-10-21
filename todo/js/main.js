@@ -17,13 +17,12 @@ var todoList = {
     displayTodos: function() {
         var todoItem = document.getElementById("todo_list");
         var todoDivs = "";
-        var array = this.todos;
-        if (array.length) {
-            for (var i = 0; i < array.length; i++ ) {
-                if (array[i].completed) {
-                    todoDivs += "<li>" + array[i].todoText + " <span>COMPLETED</span></li>";
+        if (this.todos.length) {
+            for (var i = 0; i < this.todos.length; i++ ) {
+                if (this.todos[i].completed) {
+                    todoDivs += "<li><span>(&#x2713;)</span> " + this.todos[i].todoText + "</li>";
                 } else {
-                    todoDivs += "<li>" + array[i].todoText + " <span>NOT COMPLETED</span></li>";
+                    todoDivs += "<li><span>(&nbsp;&nbsp;&nbsp;)</span> " + this.todos[i].todoText + "</li>";
                 }
             }
             todoItem.innerHTML = todoDivs;
@@ -31,8 +30,13 @@ var todoList = {
             todoItem.innerHTML = "<li>No todos</li>";
         }
     },
-    addTodo: function(todoItem) {
-        this.todos.push(todoItem);
+    addTodo: function(todoText, completed = false) {
+        this.todos.push(
+            {
+                todoText: todoText,
+                completed: completed
+            }
+        );
         this.displayTodos();
     },
     changeTodo: function(position, value) {
@@ -44,22 +48,37 @@ var todoList = {
         this.displayTodos();
     },
     toggleCompleted: function(position) {
-        console.log(this.todos[position].completed);
+        if (position === undefined) {
+            console.log("Please include a position as an argument.");
+            return;
+        }
         this.todos[position].completed = !this.todos[position].completed;
-        console.log(this.todos[position].completed);
         this.displayTodos();
     },
     toggleAll: function() {
-        // If everything is true, make it false.  Otherwise, make it true.
-        console.log(this.todos);
-        var todoCompleted = todoList.todos;
-        for (var i in todoList.todos) {
-            if (todoCompleted[i].completed === false) {
-               todoCompleted[i].completed = true;
-            } else {
-                todoCompleted[i].completed = false;
+            var totalTodos = this.todos.length;
+            var completedTodos = 0;
+
+            // Get number of completed todos.
+            for (var i = 0; i < totalTodos; i++) {
+                if (this.todos[i].completed) {
+                    completedTodos++;
+                }
             }
-        }
+
+            // Compare num of completed todos to total todos
+            // If everything is true, make it false.
+            if (completedTodos === totalTodos) {
+                for (var i = 0; i < totalTodos; i++) {
+                    this.todos[i].completed = false
+                }
+            }
+            // Otherwise, Make everything true
+            else {
+                for (var i = 0; i < totalTodos; i++) {
+                    this.todos[i].completed = true;
+                }
+            }
         this.displayTodos();
     }
 }
@@ -219,46 +238,70 @@ tests({
     }
 });
 // .displayTodos should tell you if todo is empty
-// tests({
-//     '.displayTods should tell you if todo is empty': function() {
-//         // Tell if todo is empty
-//         // 1st div say "No todos"
-//         var todoDivs = document.getElementById("todo_list");
-//         todoList.displayTodos([]);
-//         // console.log(todoDivs.childNodes[0].innerHTML);
-//         eqs(todoDivs.childNodes[0].innerHTML, "No todos");
-//     }
-// });
+tests({
+    '.displayTodos should tell you if todo is empty': function() {
+        var todoDivs = document.getElementById("todo_list");
+        todoList.todos = []; // Make an emtpy list of todos;
+        todoList.displayTodos(); // Display the list.
+        eqs(todoDivs.childNodes[0].innerHTML, "No todos");
+    }
+});
 // .displayTodos should show .completed
-// tests({
-//     '.displayTodos should show .completed': function() {
-//         //If todo is complete, it should show checkbox that is checked.
-//         var todoDiv = document.getElementById("todo_list");
-//         var testTodo = {todoText: "Completed task", completed: true};
-//         todoList.displayTodos([testTodo]);
-//         eq(todoDiv.children[0].children[0].innerText, "COMPLETED");
-//     }
-// })
+tests({
+    '.displayTodos should show .completed': function() {
+        //If todo is complete, it should show checkbox that is checked.
+        var todoDiv = document.getElementById("todo_list");
+        todoList.todos = [{todoText: "Completed task", completed: true}];
+        todoList.displayTodos();
+        eq(todoDiv.children[0].children[0].innerText, "(✓)");
+    }
+})
 
 // Version 6
 // toggleAll: If everything's true, make everything false.
 tests({
     'toggleAll: If everythings true, make everything false': function() {
-    //     function getProperty(array){ // TODO: Second arguement with property for "completed" doesn't work.
-    //         var saveCompletedArray = [];
-    //         for ( var i = 0; i < array.length; i++ ) {
-    //             saveCompletedArray.push(array[i].completed); //Completed is hardcoded
-    //         }
-    //         return saveCompletedArray;
-    //     }
-    //     var beforeToggle = getProperty(todoList.todos);
-    //     todoList.toggleCompleted();
-    //     var afterToggle = getProperty(todoList.todos);
-    //     assert(!(beforeToggle.toString() === afterToggle.toString()), "Doesn't equal");
-    }
+        // Todos with all completed
+        todoList.todos = [
+            {todoText: "todo1", completed: true},
+            {todoText: "todo2", completed: true},
+            {todoText: "todo3", completed: true},
+        ]
+        todoList.displayTodos();
+        todoList.toggleAll();
 
+        var totalTodos = todoList.todos.length;
+        var completedTodos = 0;
+        for (var i = 0; i < totalTodos; i++) {
+            if (todoList.todos[i].completed) {
+                completedTodos++;
+            }
+        }
+        eqs(completedTodos, 0);
+    }
 });
 // toggleAll: Otherwise, make it true
+tests({
+    'toggleAll: If everythings true, make everything false': function() {
+        // Todos with all completed
+        todoList.todos = [
+            {todoText: "todo1", completed: false},
+            {todoText: "todo2", completed: false},
+            {todoText: "todo3", completed: true},
+        ]
+        todoList.displayTodos();
+        todoList.toggleAll();
+
+        var totalTodos = todoList.todos.length;
+        var completedTodos = 0;
+        for (var i = 0; i < totalTodos; i++) {
+            if (todoList.todos[i].completed) {
+                completedTodos++;
+            }
+        }
+        eqs(completedTodos, 3);
+    }
+});
 
 // Version 7
 // There shold be a "Display todos" button and a "Toggle all" button in the app.
