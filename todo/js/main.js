@@ -1,19 +1,6 @@
 // PracticalJS - Todo vanillaJS code below
 var todoList = {
-    todos: [
-        {
-            todoText: "todo1",
-            completed: false
-        },
-        {
-            todoText: "todo2",
-            completed: false
-        },
-        {
-            todoText: "todo3",
-            completed: false
-        }
-    ],
+    todos: [],
     displayTodos: function() {
         var todoItem = document.getElementById("todo_list");
         var todoDivs = "";
@@ -126,7 +113,7 @@ tests({
     'It should have a way to add new todos': function() {
         var newTodoItem = {todoText: "Changed todoText", completed: true}
         todoList.addTodo(newTodoItem);
-        eq(todoList.todos.length, 4);
+        eq(todoList.todos.length, 1);
     },
 });
 // It should have a way to change a todo
@@ -139,6 +126,11 @@ tests({
 // It should have a way to delete a todo
 tests({
     'It should have a way to delete a todo': function() {
+        todoList.todos = [
+            {todoText: "todo1",completed: false},
+            {todoText: "todo2",completed: false},
+            {todoText: "todo3",completed: false}
+        ]
         var originalTodoLength = todoList.todos.length;
         todoList.deleteTodo(1);
         eq(originalTodoLength - 1, todoList.todos.length);
