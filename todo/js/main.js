@@ -19,10 +19,17 @@ var todoList = {
         var todoDivs = "";
         if (this.todos.length) {
             for (var i = 0; i < this.todos.length; i++ ) {
+                // var uid = new Date().getTime()*Math.random(); // Not used since 'i' is used to reference todo array.
+                var deleteTodoButton = "<button class='delete_todo' onClick='todoList.deleteTodo(" +
+                i + ")'>X</button>"
                 if (this.todos[i].completed) {
-                    todoDivs += "<li><span>(&#x2713;)</span> <span>" + this.todos[i].todoText + "</span></li>";
+                    todoDivs += "<li id='" + i + "'><span>(&#x2713;)</span> <span>" +
+                    this.todos[i].todoText + "</span>  " +
+                    deleteTodoButton + "</li>";
                 } else {
-                    todoDivs += "<li><span>(&nbsp;&nbsp;&nbsp;)</span> <span>" + this.todos[i].todoText + "</span></li>";
+                    todoDivs += "<li id='" + i + "'><span>(&nbsp;&nbsp;&nbsp;)</span> <span>" +
+                    this.todos[i].todoText + "</span>  " +
+                    deleteTodoButton + "</li>";
                 }
             }
             todoItem.innerHTML = todoDivs;
@@ -220,7 +227,6 @@ tests({
 // todoList.toggleCompleted should change the completed property
 tests({
     'todoList.toggleCompleted should change the completed property': function() {
-        debugger;
         var position = 0;
         var beforeToggle = todoList.todos[position].completed;
         // console.log(beforeToggle);
@@ -358,7 +364,7 @@ tests({
 })
 // It should have working controls for .changeTodo. Textbox and button.
 tests({
-    'It should have working control for .addTodo. Textbox and button.': function() {
+    'It should have working control for .changeTodo. Textbox and button.': function() {
         var textbox = document.getElementById("change_todo_text");
         var button = document.getElementById("change_todo_button");
         assert(textbox, "Missing textbox");
@@ -367,7 +373,7 @@ tests({
 })
 // It should have working controls for .deleteTodo. Textbox and button.
 tests({
-    'It should have working control for .addTodo. Textbox and button.': function() {
+    'It should have working control for .deleteTodo. Textbox and button.': function() {
         var textbox = document.getElementById("delete_todo_text");
         var button = document.getElementById("delete_todo_button");
         assert(textbox, "Missing textbox");
@@ -376,7 +382,7 @@ tests({
 })
 // It should have working controls for .toggleCompleted. Textbox and button.
 tests({
-    'It should have working control for .addTodo. Textbox and button.': function() {
+    'It should have working control for .toggleCompleted. Textbox and button.': function() {
         var textbox = document.getElementById("toggle_completed_text");
         var button = document.getElementById("toggle_completed_button");
         assert(textbox, "Missing textbox");
@@ -398,18 +404,58 @@ tests({
             {todoText: "Last todo", completed: true},
         ]
         todoList.displayTodos();
-        eq(todoDivs.children[0].innerHTML, "<span>(&nbsp;&nbsp;&nbsp;)</span> <span>First todo</span>");
-        eq(todoDivs.children[1].innerHTML, "<span>(✓)</span> <span>Middle todo</span>");
-        eq(todoDivs.children[2].innerHTML, "<span>(✓)</span> <span>Last todo</span>");
+
+        eq(todoDivs.children[0].children[0].innerHTML, "(&nbsp;&nbsp;&nbsp;)");
+        eq(todoDivs.children[0].children[1].innerHTML, "First todo");
+
+        eq(todoDivs.children[1].children[0].innerHTML, "(✓)");
+        eq(todoDivs.children[1].children[1].innerHTML, "Middle todo");
+
+        eq(todoDivs.children[2].children[0].innerHTML, "(✓)");
+        eq(todoDivs.children[2].children[1].innerHTML, "Last todo");
     }
-})
+});
 
 // Version 10
 // There should be a way to create delete buttons
+    // Create a variable with delete button for each todo <li> item.
 // There should be a delete button for each todo
+    // Apply the delete button to each todo
 // Each li should have an id that has the todo position
+    // Apply an ID to each todo, that is uniuqe.
 // Delete buttons should have access to the todo id
+    // Delete button uses that ID to delete the todo.
 // Clicking delete should update todoList.todos and the DOM
+    // Clicking on delete button, updates the UI.
+
+// Revised test (KENNY): Each todo has a delete button
+tests({
+    'Each todo should have a delete button': function() {
+        // Total number of todos
+        var totalTodos = todoList.todos.length;
+        var listDeleteButtons = document.getElementsByClassName("delete_todo");
+        var totalDeleteButtons = listDeleteButtons.length;
+
+        // Total number of delete buttons
+        eqs(totalDeleteButtons, totalTodos);
+    }
+});
+
+// Revised test (KENNY): Corresponding delete button deletes the todo
+tests({
+    'Corresponding delete button deletes the todo': function() {
+        var todoDivs = document.getElementById("todo_list");
+        todoList.todos = [
+            {todoText: "First todo", completed: false},
+            {todoText: "Middle todo", completed: true},
+            {todoText: "Last todo", completed: true},
+        ];
+        todoList.deleteTodo(0);
+        todoList.displayTodos();
+        //console.log(todoList.todos[0].todoText);  // Show the 0 position of the todo array to confirm delete.
+        assert(!(todoList.todos[0].todoText === "First todo"), "Todo text equal when it shouldn't be.");
+    }
+})
 
 // Version 11
 // todoList.toggleAll should use forEach
