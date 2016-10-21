@@ -18,8 +18,9 @@ var todoList = {
         var todoItem = document.getElementById("todo_list");
         var todoDivs = "";
         if (this.todos.length) {
-            for (var i = 0; i < this.todos.length; i++ ) {
-                // var uid = new Date().getTime()*Math.random(); // Not used since 'i' is used to reference todo array.
+            // for (var i = 0; i < this.todos.length; i++ ) {
+            this.todos.forEach(function(todo, i) {
+                var uid = new Date().getTime()*Math.random(); // Not used since 'i' is used to reference todo array.
                 var deleteTodoButton = "<button class='delete_todo' onClick='todoList.deleteTodo(" +
                 i + ")'>X</button>"
                 if (this.todos[i].completed) {
@@ -31,7 +32,7 @@ var todoList = {
                     this.todos[i].todoText + "</span>  " +
                     deleteTodoButton + "</li>";
                 }
-            }
+            }.bind(this))
             todoItem.innerHTML = todoDivs;
         } else {
             todoItem.innerHTML = "<li>No todos</li>";
@@ -73,24 +74,28 @@ var todoList = {
         var completedTodos = 0;
 
         // Get number of completed todos.
-        for (var i = 0; i < totalTodos; i++) {
-            if (this.todos[i].completed) {
+        this.todos.forEach(function(todo) {
+            if (todo.completed) {
                 completedTodos++;
             }
-        }
+        })
 
         // Compare num of completed todos to total todos
         // If everything is true, make it false.
         if (completedTodos === totalTodos) {
-            for (var i = 0; i < totalTodos; i++) {
-                this.todos[i].completed = false
-            }
+            this.todos.forEach(function(todo) {
+                todo.completed = false;
+            })
         }
         // Otherwise, Make everything true
         else {
-            for (var i = 0; i < totalTodos; i++) {
-                this.todos[i].completed = true;
-            }
+            // for (var i = 0; i < totalTodos; i++) {
+            //     this.todos[i].completed = true;
+            // }
+
+            this.todos.forEach(function(todo) {
+                todo.completed = true;
+            })
         }
         this.displayTodos();
     }
@@ -459,4 +464,6 @@ tests({
 
 // Version 11
 // todoList.toggleAll should use forEach
+    // DONE - this is refactor, not a test
 // view.displayTodos shoudl use forEach
+    // DONE - this is refactor, not a test. Took some time to figure out .bind(this).  Figured it out on my own. :)
