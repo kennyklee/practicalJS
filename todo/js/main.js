@@ -20,9 +20,9 @@ var todoList = {
         if (this.todos.length) {
             for (var i = 0; i < this.todos.length; i++ ) {
                 if (this.todos[i].completed) {
-                    todoDivs += "<li><span>(&#x2713;)</span> " + this.todos[i].todoText + "</li>";
+                    todoDivs += "<li><span>(&#x2713;)</span> <span>" + this.todos[i].todoText + "</span></li>";
                 } else {
-                    todoDivs += "<li><span>(&nbsp;&nbsp;&nbsp;)</span> " + this.todos[i].todoText + "</li>";
+                    todoDivs += "<li><span>(&nbsp;&nbsp;&nbsp;)</span> <span>" + this.todos[i].todoText + "</span></li>";
                 }
             }
             todoItem.innerHTML = todoDivs;
@@ -304,9 +304,40 @@ tests({
 });
 
 // Version 7
-// There shold be a "Display todos" button and a "Toggle all" button in the app.
+// There should be a "Display todos" button and a "Toggle all" button in the app.
+tests({
+    'There should be a "Display Todos" button and a "Toggle all" button in the app': function() {
+        var displayTodosButton = document.getElementById("display_todos");
+        var toggleAllButton = document.getElementById("toggle_all");
+        assert(displayTodosButton, "No button");
+        assert(toggleAllButton, "No button");
+    }
+});
 // Clicking "Display todos" should run todoList.displayTodos.
+tests({
+    'Clicking "Display todos" should run todoList.displayTodos': function() {
+        var todoDivs = document.getElementById("todo_list");
+        var displayTodosButton = document.getElementById("display_todos");
+        todoList.todos = [
+            {todoText: "Display button clicked!", completed: false}
+        ]
+        displayTodosButton.click();
+        eq(todoDivs.children[0].children[1].innerText, "Display button clicked!");
+    }
+})
+
 // Clicking "Toggle all" should run todoList.toggleAll.
+tests({
+    'Clicking "Toggle all" should run todoList.displayTodos': function() {
+        var toggleAllButton = document.getElementById("toggle_all");
+        todoList.todos = [
+            {todoText: "Display button clicked!", completed: false}
+        ]
+        eq(todoList.todos[0].completed, false) // First false
+        toggleAllButton.click(); // Button clicked
+        eq(todoList.todos[0].completed, true); // Now true
+    }
+})
 
 // Version 8
 // It should have working controls for .addTodo
