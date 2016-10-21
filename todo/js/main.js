@@ -1,30 +1,6 @@
 // PracticalJS - Todo vanillaJS code below
 var todoList = {
     todos: [],
-    displayTodos: function() {
-        var todoItem = document.getElementById("todo_list");
-        var todoDivs = "";
-        if (this.todos.length) {
-            // for (var i = 0; i < this.todos.length; i++ ) {
-            this.todos.forEach(function(todo, i) {
-                var uid = new Date().getTime()*Math.random(); // Not used since 'i' is used to reference todo array.
-                var deleteTodoButton = "<button class='delete_todo' onClick='todoList.deleteTodo(" +
-                i + ")'>X</button>"
-                if (this.todos[i].completed) {
-                    todoDivs += "<li id='" + i + "'><span>(&#x2713;)</span> <span>" +
-                    this.todos[i].todoText + "</span>  " +
-                    deleteTodoButton + "</li>";
-                } else {
-                    todoDivs += "<li id='" + i + "'><span>(&nbsp;&nbsp;&nbsp;)</span> <span>" +
-                    this.todos[i].todoText + "</span>  " +
-                    deleteTodoButton + "</li>";
-                }
-            }, this)
-            todoItem.innerHTML = todoDivs;
-        } else {
-            todoItem.innerHTML = "<li>No todos</li>";
-        }
-    },
     addTodo: function(todoText, completed = false) {
         if (!todoText) {
             return;
@@ -35,22 +11,22 @@ var todoList = {
                 completed: completed
             }
         );
-        this.displayTodos();
+        view.displayTodos();
     },
     changeTodo: function(position, todoText) {;
         if ((position >= 0) && todoText) {
             this.todos[position].todoText = todoText;
-            this.displayTodos();
+            view.displayTodos();
         }
     },
     deleteTodo: function(position) {
         this.todos.splice(position, 1);
-        this.displayTodos();
+        view.displayTodos();
     },
     toggleCompleted: function(position) {
         if (position >= 0) {
             this.todos[position].completed = !this.todos[position].completed;
-            this.displayTodos();
+            view.displayTodos();
         } else {
             console.log("Please include a position as an argument.");
             return
@@ -79,10 +55,36 @@ var todoList = {
                 todo.completed = true;
             })
         }
-        this.displayTodos();
+        view.displayTodos();
     }
 }
 
+var view = {
+    displayTodos: function() {
+        var todoItem = document.getElementById("todo_list");
+        var todoDivs = "";
+        if (todoList.todos.length) {
+            // for (var i = 0; i < this.todos.length; i++ ) {
+            todoList.todos.forEach(function(todo, i) {
+                var uid = new Date().getTime()*Math.random(); // Not used since 'i' is used to reference todo array.
+                var deleteTodoButton = "<button class='delete_todo' onClick='todoList.deleteTodo(" +
+                i + ")'>X</button>"
+                if (todoList.todos[i].completed) {
+                    todoDivs += "<li id='" + i + "'><span>(&#x2713;)</span> <span>" +
+                    todoList.todos[i].todoText + "</span>  " +
+                    deleteTodoButton + "</li>";
+                } else {
+                    todoDivs += "<li id='" + i + "'><span>(&nbsp;&nbsp;&nbsp;)</span> <span>" +
+                    todoList.todos[i].todoText + "</span>  " +
+                    deleteTodoButton + "</li>";
+                }
+            })
+            todoItem.innerHTML = todoDivs;
+        } else {
+            todoItem.innerHTML = "<li>No todos</li>";
+        }
+    }
+}
 // ===============================================
 // Tests for Todo app - using tinytest.js
 // ===============================================
@@ -104,7 +106,7 @@ tests({
 tests({
     'It should have a place to display todos': function() {
         var todoItem = document.getElementById("todo_list");
-        todoList.displayTodos(todoList.todos); //Populate the todolist.
+        view.displayTodos(todoList.todos); //Populate the todolist.
         assert(todoItem.innerHTML, "Todo list is empty");
     },
 });
@@ -141,7 +143,7 @@ tests({
 // It should have a function to display todos
 tests({
     'It should have a function to display todos': function() {
-        eq(typeof todoList.displayTodos, "function");
+        eq(typeof view.displayTodos, "function");
     },
 });
 // It should have a function to add todos
@@ -173,7 +175,7 @@ tests({
 // It should have a displayTodos method
 tests({
     'It should have a displayTodos method': function() {
-        assert(todoList.displayTodos, "Doesn't exist")
+        assert(view.displayTodos, "Doesn't exist")
     }
 });
 // It should have a addTodo method
@@ -234,7 +236,7 @@ tests({
 tests({
     '.displayTodos should show .todoText': function() {
         var todoDivs = document.getElementById("todo_list");
-        todoList.displayTodos(todoList.todos);
+        view.displayTodos(todoList.todos);
         // The todoListText id should contain the list of todos.
         // Test by comparing the list of todos in the array with the number of <li> in the HTML todo list.
         // console.log("HTML li: ", todoListText.childNodes.length);
@@ -247,7 +249,7 @@ tests({
     '.displayTodos should tell you if todo is empty': function() {
         var todoDivs = document.getElementById("todo_list");
         todoList.todos = []; // Make an emtpy list of todos;
-        todoList.displayTodos(); // Display the list.
+        view.displayTodos(); // Display the list.
         eqs(todoDivs.childNodes[0].innerHTML, "No todos");
     }
 });
@@ -257,7 +259,7 @@ tests({
         //If todo is complete, it should show checkbox that is checked.
         var todoDiv = document.getElementById("todo_list");
         todoList.todos = [{todoText: "Completed task", completed: true}];
-        todoList.displayTodos();
+        view.displayTodos();
         eq(todoDiv.children[0].children[0].innerText, "(✓)");
     }
 })
@@ -272,7 +274,7 @@ tests({
             {todoText: "todo2", completed: true},
             {todoText: "todo3", completed: true},
         ]
-        todoList.displayTodos();
+        view.displayTodos();
         todoList.toggleAll();
 
         var totalTodos = todoList.todos.length;
@@ -294,7 +296,7 @@ tests({
             {todoText: "todo2", completed: false},
             {todoText: "todo3", completed: true},
         ]
-        todoList.displayTodos();
+        view.displayTodos();
         todoList.toggleAll();
 
         var totalTodos = todoList.todos.length;
@@ -318,7 +320,7 @@ tests({
 });
 // Clicking "Toggle all" should run todoList.toggleAll.
 tests({
-    'Clicking "Toggle all" should run todoList.displayTodos': function() {
+    'Clicking "Toggle all" should run view.displayTodos': function() {
         var toggleAllButton = document.getElementById("toggle_all");
         todoList.todos = [
             {todoText: "Display button clicked!", completed: false}
@@ -371,7 +373,7 @@ tests({
             {todoText: "Middle todo", completed: true},
             {todoText: "Last todo", completed: true},
         ]
-        todoList.displayTodos();
+        view.displayTodos();
 
         eq(todoDivs.children[0].children[0].innerHTML, "(&nbsp;&nbsp;&nbsp;)");
         eq(todoDivs.children[0].children[1].innerHTML, "First todo");
@@ -419,7 +421,7 @@ tests({
             {todoText: "Last todo", completed: true},
         ];
         todoList.deleteTodo(0);
-        todoList.displayTodos();
+        view.displayTodos();
         //console.log(todoList.todos[0].todoText);  // Show the 0 position of the todo array to confirm delete.
         assert(!(todoList.todos[0].todoText === "First todo"), "Todo text equal when it shouldn't be.");
     }
