@@ -1,21 +1,24 @@
 // PracticalJS - Todo vanillaJS code below
 
-var app = {
-    todos: [
+var todoList = {
+    todoText: [
       "todo1", "todo2", "todo3"
     ],
     displayTodos: function(array) {
         var todoItem = document.getElementById("todo_item");
         todoItem.innerHTML = array
     },
-    addTodo: function(todo) {
-        this.todos.push(todo);
+    addTodo: function(todoItem) {
+        this.todoText.push({todoItem});
     },
     changeTodo: function(position, value) {
-        this.todos[position] = value;
+        this.todoText[position] = value;
     },
     deleteTodo: function(position) {
-        this.todos.splice(position, 1);
+        this.todoText.splice(position, 1);
+    },
+    toggleCompleted: function(){
+
     }
 }
 
@@ -33,37 +36,37 @@ var app = {
 // It should have a place to store todos
 tests({
     'It should have a place to store todos': function() {
-        assert(app.todos);
+        assert(todoList.todoText);
     },
 });
-// It should have a way to display todos
+// It should have a way to display todoText
 tests({
     'It should have a place to display todos': function() {
         var todoItem = document.getElementById("todo_item");
-        app.displayTodos(app.todos);
-        assertStrictEquals(app.todos.toString(), todoItem.innerHTML);
+        todoList.displayTodos(todoList.todoText);
+        assertStrictEquals(todoList.todoText.toString(), todoItem.innerHTML);
     },
 });
 // It should have a way to add new todos
 tests({
     'It should have a way to add new todos': function() {
-        app.addTodo("todo4");
-        eq(app.todos.length, 4);
+        todoList.addTodo("todo4");
+        eq(todoList.todoText.length, 4);
     },
 });
 // It should have a way to change a todo
 tests({
     'It should have a way to change a todo': function() {
-        app.changeTodo(0, "todo1_changed");
-        eq(app.todos[0], "todo1_changed");
+        todoList.changeTodo(0, "todo1_changed");
+        eq(todoList.todoText[0], "todo1_changed");
     }
 })
 // It should have a way to delete a todo
 tests({
     'It should have a way to delete a todo': function() {
-        var originalTodoLength = app.todos.length;
-        app.deleteTodo(1);
-        eq(originalTodoLength - 1, app.todos.length);
+        var originalTodoLength = todoList.todoText.length;
+        todoList.deleteTodo(1);
+        eq(originalTodoLength - 1, todoList.todoText.length);
     }
 })
 
@@ -71,25 +74,25 @@ tests({
 // It should have a function to display todos
 tests({
     'It should have a function to display todos': function() {
-        eq(typeof app.displayTodos, "function");
+        eq(typeof todoList.displayTodos, "function");
     },
 });
 // It should have a function to add todos
 tests({
     'It should have a function to add todos': function() {
-        eq(typeof app.addTodo, "function");
+        eq(typeof todoList.addTodo, "function");
     },
 });
 // It should have a function to change todos
 tests({
     'It should have a function to change todos': function() {
-        eq(typeof app.changeTodo, "function");
+        eq(typeof todoList.changeTodo, "function");
     },
 });
 // It should have a function to delete todos
 tests({
     'It should have a function to delete todos': function() {
-        eq(typeof app.deleteTodo, "function");
+        eq(typeof todoList.deleteTodo, "function");
     },
 });
 
@@ -97,42 +100,51 @@ tests({
 // It should store the todos array on an object
 tests({
     'It should store the todos array on an object': function() {
-        eq(typeof app.todos, "object")
+        eq(typeof todoList.todoText, "object")
     }
 });
 // It should have a displayTodos method
 tests({
     'It should have a displayTodos method': function() {
-        assert(app.displayTodos, "Doesn't exist")
+        assert(todoList.displayTodos, "Doesn't exist")
     }
 });
 // It should have a addTodo method
 tests({
     'It should have a addTodo method': function() {
-        assert(app.addTodo, "Doesn't exist")
+        assert(todoList.addTodo, "Doesn't exist")
     }
 });
 // It should have a changeTodo method
 tests({
     'It should have a changeTodo method': function() {
-        assert(app.changeTodo, "Doesn't exist")
+        assert(todoList.changeTodo, "Doesn't exist")
     }
 });
 // It should have a deleteTodo method
 tests({
     'It should have a deleteTodo method': function() {
-        assert(app.deleteTodo, "Doesn't exist")
+        assert(todoList.deleteTodo, "Doesn't exist")
     }
 });
 
 // Version 4
 // todoList.addTodo should add objects
+tests({
+    'todoList.addTodo should add objects': function() {
+        //debugger;
+        todoList.addTodo("hello");
+        var lastArrayPosition = todoList.todoText.length - 1;
+        console.log(todoList.todoText[lastArrayPosition]);
+        eq(typeof todoList.todoText[lastArrayPosition], "object");
+    }
+})
 // todoList.changeTodo should change the todoText property
 // todoList.toggleCompleted should change the completed property
 
 // Version 5
 // .displayTodos should show .todoText
-// .displayTodos should tell you if .todos is empty
+// .displayTodos should tell you if todo is empty
 // .displayTodos should show .completed
 
 // Version 6
