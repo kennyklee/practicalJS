@@ -3,20 +3,32 @@ var todoList = {
     todos: [
         {
             todoText: "todo1",
-            completed: true
+            completed: false
         },
         {
             todoText: "todo2",
-            completed: true
+            completed: false
         },
         {
             todoText: "todo3",
-            completed: true
+            completed: false
         }
     ],
     displayTodos: function(array) {
-        var todoItem = document.getElementById("todo_item");
-        todoItem.innerHTML = array;
+        var todoItem = document.getElementById("todo_list");
+        var todoDivs = "";
+        if (array.length) {
+            for (var i = 0; i < array.length; i++ ) {
+                if (array[i].completed) {
+                    todoDivs += "<li>" + array[i].todoText + " <span>COMPLETED</span></li>";
+                } else {
+                    todoDivs += "<li>" + array[i].todoText + "</li>";
+                }
+            }
+            todoItem.innerHTML = todoDivs;
+        } else {
+            todoItem.innerHTML = "<li>No todos</li>";
+        }
     },
     addTodo: function(todoItem) {
         this.todos.push(todoItem);
@@ -54,9 +66,9 @@ tests({
 // It should have a way to display todoText
 tests({
     'It should have a place to display todos': function() {
-        var todoItem = document.getElementById("todo_item");
-        todoList.displayTodos(todoList.todos);
-        assertStrictEquals(todoList.todos.toString(), todoItem.innerHTML);
+        var todoItem = document.getElementById("todo_list");
+        todoList.displayTodos(todoList.todos); //Populate the todolist.
+        assert(todoItem.innerHTML, "Todo list is empty");
     },
 });
 // It should have a way to add new todos
@@ -65,7 +77,6 @@ tests({
         var newTodoItem = {todoText: "Changed todoText", completed: true}
         todoList.addTodo(newTodoItem);
         eq(todoList.todos.length, 4);
-        console.log(todoList.todos);
     },
 });
 // It should have a way to change a todo
@@ -178,12 +189,46 @@ tests({
         var afterToggle = getProperty(todoList.todos);
         assert(!(beforeToggle.toString() === afterToggle.toString()), "Doesn't equal");
     }
-})
+});
 
 // Version 5
 // .displayTodos should show .todoText
+tests({
+    '.displayTodos should show .todoText': function() {
+        var todoDivs = document.getElementById("todo_list");
+        todoList.displayTodos(todoList.todos);
+
+        console.log(todoList.todos);
+
+        // The todoListText id should contain the list of todos.
+        // Test by comparing the list of todos in the array with the number of <li> in the HTML todo list.
+        // console.log("HTML li: ", todoListText.childNodes.length);
+        // console.log("Array length: ", todoList.todos.length);
+        eqs(todoDivs.childNodes.length, todoList.todos.length);
+    }
+});
 // .displayTodos should tell you if todo is empty
+tests({
+    '.displayTods should tell you if todo is empty': function() {
+        // Tell if todo is empty
+        // 1st div say "No todos"
+        var todoDivs = document.getElementById("todo_list");
+        todoList.displayTodos([]);
+        // console.log(todoDivs.childNodes[0].innerHTML);
+        eqs(todoDivs.childNodes[0].innerHTML, "No todos");
+    }
+});
 // .displayTodos should show .completed
+tests({
+    '.displayTodos should show .completed': function() {
+        //If todo is complete, it should show checkbox that is checked.
+        var todoDiv = document.getElementById("todo_list");
+        console.log(todoDiv);
+        var testTodo = {todoText: "Completed task", completed: true};
+        todoList.displayTodos([testTodo]);
+        eq(todoDiv.children[0].children[0].innerText, "COMPLETED");
+    }
+})
 
 // Version 6
 // toggleAll: If everything's true, make everything false.
