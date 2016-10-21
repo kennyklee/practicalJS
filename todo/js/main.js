@@ -32,7 +32,7 @@ var todoList = {
                     this.todos[i].todoText + "</span>  " +
                     deleteTodoButton + "</li>";
                 }
-            }.bind(this))
+            }, this)
             todoItem.innerHTML = todoDivs;
         } else {
             todoItem.innerHTML = "<li>No todos</li>";
@@ -79,7 +79,6 @@ var todoList = {
                 completedTodos++;
             }
         })
-
         // Compare num of completed todos to total todos
         // If everything is true, make it false.
         if (completedTodos === totalTodos) {
@@ -89,10 +88,6 @@ var todoList = {
         }
         // Otherwise, Make everything true
         else {
-            // for (var i = 0; i < totalTodos; i++) {
-            //     this.todos[i].completed = true;
-            // }
-
             this.todos.forEach(function(todo) {
                 todo.completed = true;
             })
@@ -325,25 +320,10 @@ tests({
 // There should be a "Display todos" button and a "Toggle all" button in the app.
 tests({
     'There should be a "Display Todos" button and a "Toggle all" button in the app': function() {
-        var displayTodosButton = document.getElementById("display_todos");
         var toggleAllButton = document.getElementById("toggle_all");
-        assert(displayTodosButton, "No button");
         assert(toggleAllButton, "No button");
     }
 });
-// Clicking "Display todos" should run todoList.displayTodos.
-tests({
-    'Clicking "Display todos" should run todoList.displayTodos': function() {
-        var todoDivs = document.getElementById("todo_list");
-        var displayTodosButton = document.getElementById("display_todos");
-        todoList.todos = [
-            {todoText: "Display button clicked!", completed: false}
-        ]
-        displayTodosButton.click();
-        eq(todoDivs.children[0].children[1].innerText, "Display button clicked!");
-    }
-})
-
 // Clicking "Toggle all" should run todoList.toggleAll.
 tests({
     'Clicking "Toggle all" should run todoList.displayTodos': function() {
@@ -372,15 +352,6 @@ tests({
     'It should have working control for .changeTodo. Textbox and button.': function() {
         var textbox = document.getElementById("change_todo_text");
         var button = document.getElementById("change_todo_button");
-        assert(textbox, "Missing textbox");
-        assert(button, "Missing button");
-    }
-})
-// It should have working controls for .deleteTodo. Textbox and button.
-tests({
-    'It should have working control for .deleteTodo. Textbox and button.': function() {
-        var textbox = document.getElementById("delete_todo_text");
-        var button = document.getElementById("delete_todo_button");
         assert(textbox, "Missing textbox");
         assert(button, "Missing button");
     }
