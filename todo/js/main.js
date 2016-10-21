@@ -139,6 +139,16 @@ tests({
         eq(typeof todoList.todoText[lastArrayPosition], "object");
     }
 })
+// =============================
+// KENNY NOTES (Work in progress)
+// todoApp is the app object
+// todoList is the array of todoitems
+// >> todoList has an object for each todo.
+// >> Within the object are the following properties:
+// todoText
+// completed
+// =============================
+
 // todoList.changeTodo should change the todoText property
 // todoList.toggleCompleted should change the completed property
 
