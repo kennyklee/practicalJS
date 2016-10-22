@@ -61,18 +61,42 @@ var todoList = {
 
 var handler = {
     addTodoHandler: function() {
+        var addTodoButton = document.getElementById('add_todo_button');
+        var addTodoText = document.getElementById('add_todo_text');
 
+        addTodoButton.addEventListener("click", function() {
+            todoList.addTodo(addTodoText.value)
+        });
     },
     changeTodoHandler: function() {
+        var changeTodoText = document.getElementById('change_todo_text');
+        var changeTodoPosition = document.getElementById('change_todo_position');
+        var changeTodoButton = document.getElementById('change_todo_button');
 
+        changeTodoButton.addEventListener("click", function() {
+            todoList.changeTodo(changeTodoPosition.value, changeTodoText.value);
+        });
     },
     toggleCompletedHandler: function() {
+        var toggleCompletedText = document.getElementById('toggle_completed_text');
+        var toggleCompletedButton = document.getElementById('toggle_completed_button');
 
+        toggleCompletedButton.addEventListener("click", function() {
+            todoList.toggleCompleted(toggleCompletedText.value);
+        })
     },
     toggleAllHandler: function() {
-
+        var toggleButton = document.getElementById('toggle_all');
+        toggleButton.addEventListener("click", function() {
+            todoList.toggleAll();
+        })
     }
 }
+
+handler.addTodoHandler();
+handler.changeTodoHandler();
+handler.toggleCompletedHandler();
+handler.toggleAllHandler();
 
 // Refactor this to use create deleteButton function.
 // Refactor to use add element function <li>.
