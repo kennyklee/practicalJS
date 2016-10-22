@@ -5,28 +5,22 @@ var todoList = {
         if (!todoText) {
             return;
         }
-        this.todos.push(
-            {
-                todoText: todoText,
-                completed: completed
-            }
-        );
-        view.displayTodos();
+        this.todos.push({
+            todoText: todoText,
+            completed: completed
+        });
     },
     changeTodo: function(position, todoText) {;
         if ((position >= 0) && todoText) {
             this.todos[position].todoText = todoText;
-            view.displayTodos();
         }
     },
     deleteTodo: function(position) {
         this.todos.splice(position, 1);
-        view.displayTodos();
     },
     toggleCompleted: function(position) {
         if (position >= 0) {
             this.todos[position].completed = !this.todos[position].completed;
-            view.displayTodos();
         } else {
             console.log("Please include a position as an argument.");
             return
@@ -42,20 +36,15 @@ var todoList = {
                 completedTodos++;
             }
         })
-        // Compare num of completed todos to total todos
-        // If everything is true, make it false.
-        if (completedTodos === totalTodos) {
-            this.todos.forEach(function(todo) {
+        this.todos.forEach(function(todo) {
+            // Case 1: If everything is trie, make everything false
+            if (completedTodos === totalTodos) {
                 todo.completed = false;
-            })
-        }
-        // Otherwise, Make everything true
-        else {
-            this.todos.forEach(function(todo) {
+            // Case 2: Otherwise, make everything true
+            } else {
                 todo.completed = true;
-            })
-        }
-        view.displayTodos();
+            }
+        })
     }
 }
 
@@ -66,6 +55,8 @@ var handler = {
 
         addTodoButton.addEventListener("click", function() {
             todoList.addTodo(addTodoText.value)
+            addTodoText.value = '';
+            view.displayTodos();
         });
     },
     changeTodoHandler: function() {
@@ -75,7 +66,14 @@ var handler = {
 
         changeTodoButton.addEventListener("click", function() {
             todoList.changeTodo(changeTodoPosition.value, changeTodoText.value);
+            changeTodoText.value = '';
+            changeTodoPosition.value = '';
+            view.displayTodos();
         });
+    },
+    deleteTodoHandler: function(position) {
+        todoList.deleteTodo(position);
+        view.displayTodos();
     },
     toggleCompletedHandler: function() {
         var toggleCompletedText = document.getElementById('toggle_completed_text');
@@ -83,20 +81,17 @@ var handler = {
 
         toggleCompletedButton.addEventListener("click", function() {
             todoList.toggleCompleted(toggleCompletedText.value);
-        })
+            view.displayTodos();
+        });
     },
     toggleAllHandler: function() {
         var toggleButton = document.getElementById('toggle_all');
         toggleButton.addEventListener("click", function() {
             todoList.toggleAll();
-        })
+            view.displayTodos();
+        });
     }
 }
-
-handler.addTodoHandler();
-handler.changeTodoHandler();
-handler.toggleCompletedHandler();
-handler.toggleAllHandler();
 
 // Refactor this to use create deleteButton function.
 // Refactor to use add element function <li>.
@@ -104,29 +99,54 @@ handler.toggleAllHandler();
 var view = {
     displayTodos: function() {
         var todoItem = document.getElementById("todo_list");
-        var todoDivs = "";
+        todoItem.innerHTML = '';
+
         if (todoList.todos.length) {
-            // for (var i = 0; i < this.todos.length; i++ ) {
             todoList.todos.forEach(function(todo, i) {
-                var uid = new Date().getTime()*Math.random(); // Not used since 'i' is used to reference todo array.
-                var deleteTodoButton = "<button class='delete_todo' onClick='todoList.deleteTodo(" +
-                i + ")'>X</button>"
-                if (todoList.todos[i].completed) {
-                    todoDivs += "<li id='" + i + "'><span>(&#x2713;)</span> <span>" +
-                    todoList.todos[i].todoText + "</span>  " +
-                    deleteTodoButton + "</li>";
+                var todoLi = document.createElement('li');
+                var todoDivs = "";
+
+                if (todo.completed) {
+                    todoDivs = "[X] " + todo.todoText + " ";
                 } else {
-                    todoDivs += "<li id='" + i + "'><span>(&nbsp;&nbsp;&nbsp;)</span> <span>" +
-                    todoList.todos[i].todoText + "</span>  " +
-                    deleteTodoButton + "</li>";
+                    todoDivs = "[ ] " + todo.todoText + " ";
                 }
-            })
-            todoItem.innerHTML = todoDivs;
+                todoLi.id = i;
+                todoLi.textContent = todoDivs;
+                todoLi.appendChild(this.createDeleteButton());
+                todoItem.appendChild(todoLi);
+            }, this)
         } else {
             todoItem.innerHTML = "<li>No todos</li>";
         }
+    },
+    createDeleteButton: function() {
+        var deleteButton = document.createElement('button');
+        deleteButton.textContent = 'Delete';
+        deleteButton.className = 'deleteButton';
+         // "<button class='delete_todo' onClick='todoList.deleteTodo(" + i + ")'>X</button>";
+        return deleteButton;
+    },
+    setUpEventListeners: function() {
+        handler.addTodoHandler();
+        handler.changeTodoHandler();
+        handler.toggleCompletedHandler();
+        handler.toggleAllHandler();
+
+        var todosUl = document.querySelector('ul');
+        todosUl.addEventListener('click', function(event) {
+            var elementClicked = event.target;
+
+            if (elementClicked.className === 'deleteButton') {
+                console.log(+elementClicked.parentNode.id);
+                handler.deleteTodoHandler(+elementClicked.parentNode.id);
+            }
+        });
     }
-}
+};
+
+view.setUpEventListeners();
+
 // ===============================================
 // Tests for Todo app - using tinytest.js
 // ===============================================
@@ -302,7 +322,7 @@ tests({
         var todoDiv = document.getElementById("todo_list");
         todoList.todos = [{todoText: "Completed task", completed: true}];
         view.displayTodos();
-        eq(todoDiv.children[0].children[0].innerText, "(✓)");
+        eq(todoDiv.children[0].children[0].innerText, "Delete");
     }
 })
 
@@ -417,14 +437,9 @@ tests({
         ]
         view.displayTodos();
 
-        eq(todoDivs.children[0].children[0].innerHTML, "(&nbsp;&nbsp;&nbsp;)");
-        eq(todoDivs.children[0].children[1].innerHTML, "First todo");
-
-        eq(todoDivs.children[1].children[0].innerHTML, "(✓)");
-        eq(todoDivs.children[1].children[1].innerHTML, "Middle todo");
-
-        eq(todoDivs.children[2].children[0].innerHTML, "(✓)");
-        eq(todoDivs.children[2].children[1].innerHTML, "Last todo");
+        eq(todoDivs.children[0].textContent, "[ ] First todo Delete");
+        eq(todoDivs.children[1].textContent, "[X] Middle todo Delete")
+        eq(todoDivs.children[2].textContent, "[X] Last todo Delete")
     }
 });
 
@@ -445,7 +460,7 @@ tests({
     'Each todo should have a delete button': function() {
         // Total number of todos
         var totalTodos = todoList.todos.length;
-        var listDeleteButtons = document.getElementsByClassName("delete_todo");
+        var listDeleteButtons = document.getElementsByClassName("deleteButton");
         var totalDeleteButtons = listDeleteButtons.length;
 
         // Total number of delete buttons
