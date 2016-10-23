@@ -66,20 +66,25 @@ var TinyTest = {
             var testAction = tests[testName];
             try {
                 testAction.apply(this);
-                console.log('%c' + testName, "color: green;");
+                // console.log('%c👍  ' + testName, 'color: green;');
             } catch (e) {
                 failures++;
-                console.groupCollapsed('%c' + testName, "color: red;");
-                console.error(e.stack);
+                console.groupCollapsed('%c' + Object.keys(tests).indexOf(testName) + ' 🔥 ' + testName + ' 🔥 \n%c' + e.message, 'color: red;', 'background:red; color:white;');
+                console.error('%c' + e.stack);
                 console.groupEnd();
             }
         }
         setTimeout(function() { // Give document a chance to complete
             if (window.document && document.body) {
-                document.body.style.backgroundColor = (failures == 0 ? '#99ff99' : '#ff9999');
+                if (failures > 0) {
+                    document.body.style.backgroundColor = 'red'
+                }
                 TinyTestHelper.renderStats(tests, failures);
             }
         }, 0);
+        if (failures === 0) {
+            console.log('%c👍  ALL TESTS PASSED!!! AWESOME!!! 👍', 'color: green;');
+        }
     },
 
     fail: function(msg) {
@@ -108,7 +113,7 @@ var TinyTest = {
 var fail               = TinyTest.fail.bind(TinyTest),
     assert             = TinyTest.assert.bind(TinyTest),
     assertEquals       = TinyTest.assertEquals.bind(TinyTest),
-    eq                 = TinyTest.assertEquals.bind(TinyTest), // alias for assertEquals
+    eq                 = TinyTest.assertEquals.bind(TinyTest), // alias
     assertStrictEquals = TinyTest.assertStrictEquals.bind(TinyTest),
-    eqs = TinyTest.assertStrictEquals.bind(TinyTest),
+    eqs                = TinyTest.assertStrictEquals.bind(TinyTest), // alias
     tests              = TinyTest.run.bind(TinyTest);
