@@ -29,9 +29,16 @@ var TinyTest = {
                 console.log('%c' + testName, "color: green;");
             } catch (e) {
                 failures++;
-                console.groupCollapsed('%c' + testName, "color: red;");
-                console.error(e.stack);
+                console.groupCollapsed('%c' + testName + '\n%c' + e.message,
+                                        'color: red;', 'background: red; color: white;');
+                console.error('%c' + e.stack);
                 console.groupEnd();
+                // console.log(e.columnNumber);
+                // console.log(e.filename);
+                // console.log(e.lineNumber);
+                // console.log(e.message);
+                // console.log(e.name);
+                // console.log(e.stack);
             }
         }
         setTimeout(function() { // Give document a chance to complete
@@ -68,7 +75,7 @@ var TinyTest = {
 var fail               = TinyTest.fail.bind(TinyTest),
     assert             = TinyTest.assert.bind(TinyTest),
     assertEquals       = TinyTest.assertEquals.bind(TinyTest),
-    eq                 = TinyTest.assertEquals.bind(TinyTest), // alias for assertEquals
+    eq                 = TinyTest.assertEquals.bind(TinyTest), // alias
     assertStrictEquals = TinyTest.assertStrictEquals.bind(TinyTest),
-    eqs = TinyTest.assertStrictEquals.bind(TinyTest),
+    eqs                = TinyTest.assertStrictEquals.bind(TinyTest), // alias
     tests              = TinyTest.run.bind(TinyTest);

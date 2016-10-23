@@ -3,7 +3,11 @@
 
 tests({
     'A sample success': function() {},
-    'A sample failure': function() {fail()},
+    'A sample failure': function() {
+        var a = 1;
+        var b = 2;
+        eqs(a, b);
+    },
 });
 </script>
 
