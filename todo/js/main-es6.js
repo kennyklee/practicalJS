@@ -1,5 +1,5 @@
 // PracticalJS - Todo vanillaJS code below
-var todoList = {
+const todoList = {
     todos: [],
     addTodo: function(todoText, completed = false) {
         if (!todoText) {
@@ -27,8 +27,8 @@ var todoList = {
         }
     },
     toggleAll: function() {
-        var totalTodos = this.todos.length;
-        var completedTodos = 0;
+        const totalTodos = this.todos.length;
+        let completedTodos = 0;
 
         // Get number of completed todos.
         this.todos.forEach(function(todo) {
@@ -48,10 +48,10 @@ var todoList = {
     }
 }
 
-var handler = {
+const handler = {
     addTodoHandler: function() {
-        var addTodoButton = document.getElementById('add_todo_button');
-        var addTodoText = document.getElementById('add_todo_text');
+        const addTodoButton = document.getElementById('add_todo_button');
+        const addTodoText = document.getElementById('add_todo_text');
 
         addTodoButton.addEventListener("click", function() {
             todoList.addTodo(addTodoText.value)
@@ -60,9 +60,9 @@ var handler = {
         });
     },
     changeTodoHandler: function() {
-        var changeTodoText = document.getElementById('change_todo_text');
-        var changeTodoPosition = document.getElementById('change_todo_position');
-        var changeTodoButton = document.getElementById('change_todo_button');
+        const changeTodoText = document.getElementById('change_todo_text');
+        const changeTodoPosition = document.getElementById('change_todo_position');
+        const changeTodoButton = document.getElementById('change_todo_button');
 
         changeTodoButton.addEventListener("click", function() {
             todoList.changeTodo(changeTodoPosition.value, changeTodoText.value);
@@ -76,8 +76,8 @@ var handler = {
         view.displayTodos();
     },
     toggleCompletedHandler: function() {
-        var toggleCompletedText = document.getElementById('toggle_completed_text');
-        var toggleCompletedButton = document.getElementById('toggle_completed_button');
+        const toggleCompletedText = document.getElementById('toggle_completed_text');
+        const toggleCompletedButton = document.getElementById('toggle_completed_button');
 
         toggleCompletedButton.addEventListener("click", function() {
             todoList.toggleCompleted(toggleCompletedText.value);
@@ -85,7 +85,7 @@ var handler = {
         });
     },
     toggleAllHandler: function() {
-        var toggleButton = document.getElementById('toggle_all');
+        const toggleButton = document.getElementById('toggle_all');
         toggleButton.addEventListener("click", function() {
             todoList.toggleAll();
             view.displayTodos();
@@ -93,15 +93,15 @@ var handler = {
     }
 }
 
-var view = {
+const view = {
     displayTodos: function() {
-        var todoItem = document.getElementById("todo_list");
+        const todoItem = document.getElementById("todo_list");
         todoItem.innerHTML = '';
 
         if (todoList.todos.length) {
             todoList.todos.forEach(function(todo, i) {
-                var todoLi = document.createElement('li');
-                var todoDivs = "";
+                const todoLi = document.createElement('li');
+                let todoDivs = "";
 
                 if (todo.completed) {
                     todoDivs = "[X] " + todo.todoText + " ";
@@ -118,7 +118,7 @@ var view = {
         }
     },
     createDeleteButton: function() {
-        var deleteButton = document.createElement('button');
+        const deleteButton = document.createElement('button');
         deleteButton.textContent = 'Delete';
         deleteButton.className = 'deleteButton';
         return deleteButton;
@@ -129,9 +129,9 @@ var view = {
         handler.toggleCompletedHandler();
         handler.toggleAllHandler();
 
-        var todosUl = document.querySelector('ul');
+        const todosUl = document.querySelector('ul');
         todosUl.addEventListener('click', function(event) {
-            var elementClicked = event.target;
+            const elementClicked = event.target;
 
             if (elementClicked.className === 'deleteButton') {
                 console.log(+elementClicked.parentNode.id);
@@ -155,13 +155,13 @@ tests({
     },
 // It should have a way to display todoText
     'It should have a place to display todos': function() {
-        var todoItem = document.getElementById("todo_list");
+        const todoItem = document.getElementById("todo_list");
         view.displayTodos(todoList.todos); //Populate the todolist.
         assert(todoItem.innerHTML, "Todo list is empty");
     },
 // It should have a way to add new todos
     'It should have a way to add new todos': function() {
-        var newTodoItem = {todoText: "Changed todoText", completed: true}
+        const newTodoItem = {todoText: "Changed todoText", completed: true}
         todoList.addTodo(newTodoItem);
         eq(todoList.todos.length, 1);
     },
@@ -177,7 +177,7 @@ tests({
             {todoText: "todo2",completed: false},
             {todoText: "todo3",completed: false}
         ]
-        var originalTodoLength = todoList.todos.length;
+        const originalTodoLength = todoList.todos.length;
         todoList.deleteTodo(1);
         eq(originalTodoLength - 1, todoList.todos.length);
     },
@@ -226,26 +226,26 @@ tests({
 // todoList.addTodo should add objects
     'todoList.addTodo should add objects': function() {
         //debugger;
-        var newTodoItem = {todoText: "added Todo", completed: true}
+        const newTodoItem = {todoText: "added Todo", completed: true}
         todoList.addTodo(newTodoItem);
-        var lastArrayPosition = todoList.todos.length - 1;
+        const lastArrayPosition = todoList.todos.length - 1;
         eq(typeof todoList.todos[lastArrayPosition], "object");
     },
 // todoList.changeTodo should change the todoText property
     'todoList.changeTodo should change the todoText property': function() {
         //debugger;
-        var newTodoItem = {todoText: "Changed todoText", completed: true};
+        const newTodoItem = {todoText: "Changed todoText", completed: true};
         todoList.changeTodo(0, newTodoItem);
-        var lastArrayPosition = todoList.todos.length - 1;
+        const lastArrayPosition = todoList.todos.length - 1;
         eq(typeof todoList.todos[lastArrayPosition], "object");
     },
 // todoList.toggleCompleted should change the completed property
     'todoList.toggleCompleted should change the completed property': function() {
-        var position = 0;
-        var beforeToggle = todoList.todos[position].completed;
+        const position = 0;
+        const beforeToggle = todoList.todos[position].completed;
         // console.log(beforeToggle);
         todoList.toggleCompleted(position);
-        var afterToggle = todoList.todos[position].completed;
+        const afterToggle = todoList.todos[position].completed;
         // console.log(afterToggle);
         assert(!(beforeToggle === afterToggle), "Doesn't equal");
     },
@@ -253,7 +253,7 @@ tests({
 // Version 5
 // .displayTodos should show .todoText
     '.displayTodos should show .todoText': function() {
-        var todoDivs = document.getElementById("todo_list");
+        const todoDivs = document.getElementById("todo_list");
         view.displayTodos(todoList.todos);
         // The todoListText id should contain the list of todos.
         // Test by comparing the list of todos in the array with the number of <li> in the HTML todo list.
@@ -263,7 +263,7 @@ tests({
     },
 // .displayTodos should tell you if todo is empty
     '.displayTodos should tell you if todo is empty': function() {
-        var todoDivs = document.getElementById("todo_list");
+        const todoDivs = document.getElementById("todo_list");
         todoList.todos = []; // Make an emtpy list of todos;
         view.displayTodos(); // Display the list.
         eqs(todoDivs.childNodes[0].innerHTML, "No todos");
@@ -271,7 +271,7 @@ tests({
 // .displayTodos should show .completed
     '.displayTodos should show .completed': function() {
         //If todo is complete, it should show checkbox that is checked.
-        var todoDiv = document.getElementById("todo_list");
+        const todoDiv = document.getElementById("todo_list");
         todoList.todos = [{todoText: "Completed task", completed: true}];
         view.displayTodos();
         eq(todoDiv.children[0].children[0].innerText, "Delete");
@@ -289,9 +289,9 @@ tests({
         view.displayTodos();
         todoList.toggleAll();
 
-        var totalTodos = todoList.todos.length;
-        var completedTodos = 0;
-        for (var i = 0; i < totalTodos; i++) {
+        const totalTodos = todoList.todos.length;
+        let completedTodos = 0;
+        for (let i = 0; i < totalTodos; i++) {
             if (todoList.todos[i].completed) {
                 completedTodos++;
             }
@@ -299,7 +299,7 @@ tests({
         eqs(completedTodos, 0);
     },
 // toggleAll: Otherwise, make it true
-    'toggleAll: If everythings true, make everything false': function() {
+    'toggleAll: Otherwise, make it true': function() {
         // Todos with all completed
         todoList.todos = [
             {todoText: "todo1", completed: false},
@@ -309,9 +309,9 @@ tests({
         view.displayTodos();
         todoList.toggleAll();
 
-        var totalTodos = todoList.todos.length;
-        var completedTodos = 0;
-        for (var i = 0; i < totalTodos; i++) {
+        const totalTodos = todoList.todos.length;
+        let completedTodos = 0;
+        for (let i = 0; i < totalTodos; i++) {
             if (todoList.todos[i].completed) {
                 completedTodos++;
             }
@@ -322,12 +322,12 @@ tests({
 // Version 7
 // There should be a "Display todos" button and a "Toggle all" button in the app.
     'There should be a "Display Todos" button and a "Toggle all" button in the app': function() {
-        var toggleAllButton = document.getElementById("toggle_all");
+        const toggleAllButton = document.getElementById("toggle_all");
         assert(toggleAllButton, "No button");
     },
 // Clicking "Toggle all" should run todoList.toggleAll.
     'Clicking "Toggle all" should run view.displayTodos': function() {
-        var toggleAllButton = document.getElementById("toggle_all");
+        const toggleAllButton = document.getElementById("toggle_all");
         todoList.todos = [
             {todoText: "Display button clicked!", completed: false}
         ]
@@ -339,22 +339,22 @@ tests({
 // Version 8
 // It should have working controls for .addTodo. Textbox and button.
     'It should have working control for .addTodo. Textbox and button.': function() {
-        var textbox = document.getElementById("add_todo_text");
-        var button = document.getElementById("add_todo_button");
+        const textbox = document.getElementById("add_todo_text");
+        const button = document.getElementById("add_todo_button");
         assert(textbox, "Missing textbox");
         assert(button, "Missing button");
     },
 // It should have working controls for .changeTodo. Textbox and button.
     'It should have working control for .changeTodo. Textbox and button.': function() {
-        var textbox = document.getElementById("change_todo_text");
-        var button = document.getElementById("change_todo_button");
+        const textbox = document.getElementById("change_todo_text");
+        const button = document.getElementById("change_todo_button");
         assert(textbox, "Missing textbox");
         assert(button, "Missing button");
     },
 // It should have working controls for .toggleCompleted. Textbox and button.
     'It should have working control for .toggleCompleted. Textbox and button.': function() {
-        var textbox = document.getElementById("toggle_completed_text");
-        var button = document.getElementById("toggle_completed_button");
+        const textbox = document.getElementById("toggle_completed_text");
+        const button = document.getElementById("toggle_completed_button");
         assert(textbox, "Missing textbox");
         assert(button, "Missing button");
     },
@@ -365,7 +365,7 @@ tests({
 // Each li element shoudl show .completed
 // NOTE: The 3 tests above will be combined into 1 in order to check for HTML string.
     'For each todo, there should be an li element with .todoText and .completed': function() {
-        var todoDivs = document.getElementById("todo_list");
+        const todoDivs = document.getElementById("todo_list");
         todoList.todos = [
             {todoText: "First todo", completed: false},
             {todoText: "Middle todo", completed: true},
@@ -393,9 +393,9 @@ tests({
 // Revised test (KENNY): Each todo has a delete button
     'Each todo should have a delete button': function() {
         // Total number of todos
-        var totalTodos = todoList.todos.length;
-        var listDeleteButtons = document.getElementsByClassName("deleteButton");
-        var totalDeleteButtons = listDeleteButtons.length;
+        const totalTodos = todoList.todos.length;
+        const listDeleteButtons = document.getElementsByClassName("deleteButton");
+        const totalDeleteButtons = listDeleteButtons.length;
 
         // Total number of delete buttons
         eqs(totalDeleteButtons, totalTodos);
@@ -403,7 +403,7 @@ tests({
 
 // Revised test (KENNY): Corresponding delete button deletes the todo
     'Corresponding delete button deletes the todo': function() {
-        var todoDivs = document.getElementById("todo_list");
+        const todoDivs = document.getElementById("todo_list");
         todoList.todos = [
             {todoText: "First todo", completed: false},
             {todoText: "Middle todo", completed: true},
