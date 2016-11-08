@@ -1,0 +1,14 @@
+{
+  "name": "todo-mocha",
+  "version": "0.1.0",
+  "description": "Todo with mocha tests",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "author": "Kenny Lee",
+  "license": "ISC",
+  "devDependencies": {
+    "mocha": "^3.1.2"
+  }
+}
