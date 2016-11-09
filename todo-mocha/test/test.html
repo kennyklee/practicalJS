@@ -26,15 +26,7 @@ break anything with or without it. -->
 
 <!-- MAIN TEST GOES HERE -->
 <!-- Our test suite needs to be after the source file, of course -->
-<script>
-describe(“plus”, function() {
-  describe(“plus initialization”, function() {
-    it(“should be available as a function”, function() {
-      expect(typeof window.plus).to.equal(“function”);
-    });
-  });
-});
-</script>
+<script src="./test.js"></script>
 
 <!-- Run mocha -->
 <script>mocha.run();</script>
