@@ -129,7 +129,6 @@ tests({
     eq(timesCallbackHasRun, 1);
   },
   'It should also cache dependencies.': function () {
-    debugger;
     resetStorage();
     var timesCallbackHasRun = 0;
     librarySystem('cat', [], function () {
@@ -147,7 +146,6 @@ tests({
 
     eq(librarySystem('petTheCat'), 'The cat says: meow');
     eq(librarySystem('feedTheCat'), 'The cat eats and then says: meow');
-    console.log(timesCallbackHasRun);
     eq(timesCallbackHasRun, 1);
   }
 });
@@ -466,35 +464,6 @@ tests({
       librarySystem('test');
       librarySystem('test');
       eq(callbackCounter, 1);
-  },
-  'Should throw an error if a library name already exists in libraryStorage.' : function () {
-      var isError;
-      librarySystem('redundant', [], function () {
-          return 'redundant';
-      });
-      try {
-          librarySystem('redundant', [], function () {
-              return 'redundant';
-          });
-      } catch (e) {
-          isError = (e instanceof Error);
-      }
-      eq(isError, true);
-  },
-  'Should throw an error if a library is missing a dependency.' : function () {
-      var isError;
-      librarySystem('missingDependency', ['missing'], function (missing) {
-          return missing;
-      });
-      try {
-          librarySystem('missingDependency');
-      } catch (e) {
-          isError = (e instanceof Error);
-      }
-      eq(isError, true);
-  },
-  '//////////': function() {
-    eq(true, true);
   },
   'should accept a library module': function() {
     librarySystem('app', [] , function() {

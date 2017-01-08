@@ -1,15 +1,9 @@
-// Goals
-// 1. find was way to detect any dependency that has undefined, and then return undefined for the library.
-// 2. build dependency checker (if greater than 1), than run the dependency builder.
-// DONE: 3. Dependency builder doens't need dependency.
-// 4. if dependency is undefined, then return undefined.
-
 (function (){
     // Storage for libaries
     var libraryStorage = {};
 
     function librarySystem(libraryName, dependencies, callback){
-        // Adding a library with it's callback and optional dependencies into store.
+        // Adding a library with it's callback, optional dependencies, and cache flag as actual results.
         if (arguments.length > 1) {
             libraryStorage[libraryName] = {
                 callback: callback,
@@ -18,7 +12,7 @@
                 cachedResults: null
             };
         }
-        // Call a library that doesn't exsit ==> Error message in console.
+        // Call a library that doesn't exsit ==> 'undefined'
         else if (libraryStorage[libraryName] === undefined) {
             return undefined;
         }
@@ -26,18 +20,24 @@
         else {
             var library = libraryStorage[libraryName];
             var runDependenciesAndStoreResultsInArray = dependencyBuilder(library);
+
             // If one or more of the dependency is undefined, return 'undefined'
             if ((runDependenciesAndStoreResultsInArray.indexOf(undefined) >= 0)) {
                 return undefined
             }
+
             // If library has not been loaded, pass in dependencies.
             if (library.isCached === false) {
+
                 // Insert the results of the dependencies into the library's arguments.
-                library.isCached = true;
-                library.cachedResults = library.callback.apply(null, runDependenciesAndStoreResultsInArray);
+                library.isCached = true;  // flag as cached
+                library.cachedResults = library.callback.apply(null, runDependenciesAndStoreResultsInArray); // cache the results
+                return library.cachedResults; // return the results
+            }
+            // If library has already been cached, just return the cached results.
+            if (library.isCached === true) {
                 return library.cachedResults;
             }
-            return library.cachedResults;
         }
     }
 
@@ -50,6 +50,7 @@
         return libraryDependencies;
     }
 
+    // Used for only tests
     function resetStorage() {
         libraryStorage = {};
     }
