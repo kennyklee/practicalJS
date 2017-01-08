@@ -1,22 +1,17 @@
 tests({
-    'Load an unavailable library': function() {
-        // Clear the libraryStorage for test.
-        libraryStorage = {};
-        eqs(librarySystem('name'), 'Library doesn\'t exist.');
+    'It should return \'undefined\' when calling an unavailable library.': function() {
+        eqs(librarySystem('name'), undefined);
     },
 
-    'Load a single library': function() {
-        // Clear the libraryStorage for test.
-        libraryStorage = {};
+    'It should load a single library without dependencies.': function() {
         librarySystem('name', [], function(){
             return 'kenny';
         })
         eqs(librarySystem('name'), 'kenny');
     },
 
-    'Load a library with a single dependency': function() {
-        // Clear the libraryStorage for test.
-        libraryStorage = {};
+    'It should load a library with a single dependency.': function() {
+
         librarySystem('name', [], function() {
             return 'kenny';
         });
@@ -27,65 +22,58 @@ tests({
 
         eqs(librarySystem('workBlurb'), 'kenny works at a startup.');
     },
+    'It should load a library with 2 dependencies.': function() {
 
-'Load a library with 2 dependencies': function() {
-  // Clear the libraryStorage for test.
-  libraryStorage = {};
-  librarySystem('name', [], function() {
-    return 'kenny';
-  });
+        librarySystem('name', [], function() {
+            return 'kenny';
+        });
+        librarySystem('company', [], function() {
+            return 'Weblife';
+        });
 
-  librarySystem('company', [], function() {
-    return 'Weblife';
-  });
+        librarySystem('workBlurb', ['name', 'company'], function(name, company) {
+            return name + ' works at ' + company;
+        });
 
-  librarySystem('workBlurb', ['name', 'company'], function(name, company) {
-    return name + ' works at ' + company;
-  });
+        eqs(librarySystem('workBlurb'), 'kenny works at Weblife');
+    },
 
-  eqs(librarySystem('workBlurb'), 'kenny works at Weblife');
-},
+    'It should load a library with 3 dependencies.': function() {
 
-'Load a library with 3 dependencies': function() {
-  // Clear the libraryStorage for test.
-  libraryStorage = {};
-  librarySystem('name', [], function() {
-    return 'Kenny';
-  });
+      librarySystem('name', [], function() {
+        return 'Kenny';
+      });
 
-  librarySystem('company', [], function() {
-    return 'Weblife';
-  });
+      librarySystem('company', [], function() {
+        return 'Weblife';
+      });
 
-  librarySystem('coworker', [], function() {
-    return 'Bob';
-  });
+      librarySystem('coworker', [], function() {
+        return 'Bob';
+      });
 
-  librarySystem('workBlurb', ['name', 'company', 'coworker'], function(name, company, coworker) {
-    return name + ' works at ' + company + ' with ' + coworker;
-  });
-  eqs(librarySystem('workBlurb'), 'Kenny works at Weblife with Bob');
-},
+      librarySystem('workBlurb', ['name', 'company', 'coworker'], function(name, company, coworker) {
+        return name + ' works at ' + company + ' with ' + coworker;
+      });
+      eqs(librarySystem('workBlurb'), 'Kenny works at Weblife with Bob');
+    },
 
-'Load a library with multiple dependencies out of order': function() {
-  // Clear the libraryStorage for test.
-  libraryStorage = {};
-  librarySystem('workBlurb', ['name', 'company'], function(name, company) {
-    return name + ' works at ' + company;
-  });
+    'It should load a library with multiple dependencies out of order': function() {
 
-  librarySystem('name', [], function() {
-    return 'Gordon';
-  });
+      librarySystem('workBlurb', ['name', 'company'], function(name, company) {
+        return name + ' works at ' + company;
+      });
 
-  librarySystem('company', [], function() {
-    return 'Watch and Code';
-  });
-  eqs(librarySystem('workBlurb'), 'Gordon works at Watch and Code'); // 'Gordon works at Watch and Code'
-}
-});
-  // Reset at the end of test
-//libraryStorage = {};
+      librarySystem('name', [], function() {
+        return 'Gordon';
+      });
+
+      librarySystem('company', [], function() {
+        return 'Watch and Code';
+      });
+      eqs(librarySystem('workBlurb'), 'Gordon works at Watch and Code'); // 'Gordon works at Watch and Code'
+    }
+    });
 
 // Ivo's tests
 tests({
@@ -140,7 +128,9 @@ tests({
 
     eq(timesCallbackHasRun, 1);
   },
-  'It should also chache dependencies.': function () {
+  'It should also cache dependencies.': function () {
+    debugger;
+    resetStorage();
     var timesCallbackHasRun = 0;
     librarySystem('cat', [], function () {
       timesCallbackHasRun++;
@@ -157,6 +147,7 @@ tests({
 
     eq(librarySystem('petTheCat'), 'The cat says: meow');
     eq(librarySystem('feedTheCat'), 'The cat eats and then says: meow');
+    console.log(timesCallbackHasRun);
     eq(timesCallbackHasRun, 1);
   }
 });
@@ -548,13 +539,13 @@ tests({
   }
 });
 
+// James' Tests
 tests({
   'should accept a library module': function() {
     librarySystem('app', [] , function() {
       return 'this is the app module';
     });
     eq(librarySystem('app') === 'this is the app module', true);
-    libReset();
   },
   'library should accept a dependency': function() {
     librarySystem('router', [], function() {
@@ -566,7 +557,6 @@ tests({
       }
     });
     eq(librarySystem('app').router === 'hello router', true);
-    libReset();
   },
   'library should accept multiple dependencies': function() {
     librarySystem('name', [], function() {;
@@ -579,7 +569,6 @@ tests({
       return name + ' works at ' + company;
     });
     eq(librarySystem('workBlurb') === 'Gordon works at watchandcode', true);
-    libReset();
   },
   'library should accept dependencies out of order': function() {
     librarySystem('workBlurb', ['name', 'company'], function(name, company) {
@@ -592,6 +581,5 @@ tests({
       return 'watchandcode';
     });
     eq(librarySystem('workBlurb') === 'Gordon works at watchandcode', true);
-    libReset();
   }
 });
