@@ -1,3 +1,6 @@
+
+// Kenny's code below==========
+
 (function (){
     // Storage for libaries
     var libraryStorage = {};
@@ -51,11 +54,11 @@
     }
 
     // Used for only tests
-    function resetStorage() {
+    function clearStorage() {
         libraryStorage = {};
     }
 
     window.librarySystem = librarySystem;
-    window.resetStorage = resetStorage;
+    window.clearStorage = clearStorage;
 })();
 

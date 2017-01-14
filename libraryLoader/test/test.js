@@ -1,5 +1,87 @@
 tests({
+    'It should load a single library without dependencies.': function() {
+        clearStorage();
+        librarySystem('name', [], function(){
+            return 'kenny';
+        })
+        eqs(librarySystem('name'), 'kenny');
+    },
+
+    'It should load a library with a single dependency.': function() {
+        clearStorage();
+        librarySystem('name', [], function() {
+            return 'kenny';
+        });
+
+        librarySystem('workBlurb', ['name'], function(name) {
+            return name + ' works at a startup.';
+        });
+
+        eqs(librarySystem('workBlurb'), 'kenny works at a startup.');
+    },
+
+    'It should load a library with 2 dependencies.': function() {
+        clearStorage();
+        librarySystem('name', [], function() {
+            return 'kenny';
+        });
+        librarySystem('company', [], function() {
+            return 'Weblife';
+        });
+
+        librarySystem('workBlurb', ['name', 'company'], function(name, company) {
+            return name + ' works at ' + company;
+        });
+
+        eqs(librarySystem('workBlurb'), 'kenny works at Weblife');
+    }
+})
+
+tests({
+  'It should call the libraryName callback once and cache it for later use.': function () {
+    debugger;
+    clearStorage();
+    var timesCallbackHasRun = 0;
+    librarySystem('myCallbackShouldRunOnce', [], function () {
+      timesCallbackHasRun++;
+    });
+
+    librarySystem('myCallbackShouldRunOnce');
+    librarySystem('myCallbackShouldRunOnce');
+
+    eq(timesCallbackHasRun, 1);
+  }
+})
+
+tests({
+  'It should also cache dependencies.': function () {
+    clearStorage();
+    var timesCallbackHasRun = 0;
+    librarySystem('cat', [], function () {
+      timesCallbackHasRun++;
+      return 'meow';
+    });
+
+    librarySystem('petTheCat', ['cat'], function (cat) {
+      return 'The cat says: ' + cat;
+    });
+
+    librarySystem('feedTheCat', ['cat'], function (cat) {
+      return 'The cat eats and then says: ' + cat;
+    });
+
+    eq(librarySystem('petTheCat'), 'The cat says: meow');
+    eq(librarySystem('feedTheCat'), 'The cat eats and then says: meow');
+    eq(timesCallbackHasRun, 1);
+  }
+});
+
+
+
+
+tests({
     'It should return \'undefined\' when calling an unavailable library.': function() {
+      clearStorage();
         eqs(librarySystem('name'), undefined);
     },
 
@@ -129,7 +211,7 @@ tests({
     eq(timesCallbackHasRun, 1);
   },
   'It should also cache dependencies.': function () {
-    resetStorage();
+    clearStorage();
     var timesCallbackHasRun = 0;
     librarySystem('cat', [], function () {
       timesCallbackHasRun++;
@@ -552,3 +634,5 @@ tests({
     eq(librarySystem('workBlurb') === 'Gordon works at watchandcode', true);
   }
 });
+
+
