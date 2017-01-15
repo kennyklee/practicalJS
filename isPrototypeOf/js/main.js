@@ -1,24 +1,21 @@
 (function (){
-    function isPrototypeOf(prototypeObj, object) {
-        //debugger;
-        // Not passing in an argument
-        if ((prototypeObj === undefined) || (prototypeObj === null)) {
+    function isPrototypeOf(prototype, object) {
+        var protoOfObject = Object.getPrototypeOf(object);
+
+        if ((prototype === undefined) || (prototype === null)) {
             return new TypeError("Error");
         }
 
-        // if (prototypeObj.prototype === undefined) {
-        //     return "You did not pass in a prototype."
-        // }
-
-        if (prototypeObj === object) {
+        if ((protoOfObject === undefined) || (protoOfObject === null)) {
             return false;
         }
 
-        if (prototypeObj === Object.getPrototypeOf(object)) {
-            return true;  // If the prototype is the same, then they are NOT a prototype of each other.
+        if (prototype === protoOfObject) {
+            return true;
+        } else {
+            return isPrototypeOf(prototype, protoOfObject);
         }
-        return false;
     }
 
     window.isPrototypeOf = isPrototypeOf;
-}() );
+}());
