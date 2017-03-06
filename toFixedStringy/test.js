@@ -1,3 +1,5 @@
+// Kenny's original tests.
+
 tests({
     '"abc" should return a "It\'s not a number"': function() {
       eqs( toFixedStringy("abc", 2), "It's not a number." );
@@ -29,3 +31,40 @@ tests({
       eqs( toFixedStringy(12314.12342145, 7), 12314.1234215 );
     }
 })
+
+// Jason's tests. Thanks bro.
+
+tests({
+   'should return .62': function() {
+       var testOne = toFixedStringy(.615, 2);
+       eq(testOne, .62);
+   },
+   'should return 10.24': function() {
+       var testTwo = toFixedStringy(10.235, 2);
+       eq(testTwo === 10.24, true);
+   },
+   'should return 1.01': function() {
+       var testThree = toFixedStringy(1.005, 2);
+       eq(testThree, 1.01);
+   },
+   'should return .236': function() {
+       var testFour = toFixedStringy(.2356, 3);
+       eq(testFour === .236, true);
+   },
+   'should return 10.7': function() {
+       var testFive = toFixedStringy(10.678, 1);
+       eq(testFive, 10.7);
+   },
+   'should return 10': function() {
+       var testSix = toFixedStringy(10.235, 0);
+       eq(testSix === 10, true);
+   },
+   'should return 11': function() {
+       var testSeven = toFixedStringy(10.635, 0);
+       eq(testSeven, 11);
+   },
+   'should return 1.00201': function() {
+       var testSeven = toFixedStringy(1.002005, 5);
+       eq(testSeven, 1.00201);
+   }
+});
