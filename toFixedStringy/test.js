@@ -29,6 +29,10 @@ tests({
 
     '"12314.12342145" with 7 precision return "12314.1234215"': function() {
       eqs( toFixedStringy(12314.12342145, 7), 12314.1234215 );
+    },
+
+    'Precision greater than number of decimals': function() {
+      eqs( toFixedStringy(12314.12342145, 15), 12314.12342145 );
     }
 })
 

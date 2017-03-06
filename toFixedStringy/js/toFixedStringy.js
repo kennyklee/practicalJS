@@ -50,9 +50,11 @@ function toFixedStringy(num, precision) {
         var roundedNum = Math.round(truncatedNum.join(''));
 
         // Step 4
-        // Divisor for precision
+        // Divisor for precision, but no greater zeros than the length of original decimals.
+        var numOfDecimals = num.toString().split(".")[1].length
+
         var tenBasedPrecision = "1";
-        for ( var i = 0; i < precision; i++ ) {
+        for ( var i = 0; i < precision && i < (numOfDecimals); i++ ) {
             tenBasedPrecision += "0";
         }
 
