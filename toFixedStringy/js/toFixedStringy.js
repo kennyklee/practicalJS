@@ -37,6 +37,7 @@ function toFixedStringy(num, precision) {
   */
 
   // Step 1
+
   const movedDecimalNum = numArr.spliced(originalDecimalIndex, 1)
       .spliced((originalDecimalIndex + precision), 0, '.');
 
